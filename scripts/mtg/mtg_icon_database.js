@@ -47,6 +47,6 @@ function convertStringToIconObject(string, isColorIcon = true, useSmallIcon = fa
 
 function getIconCode(code, isColorIcon = true, useSmallIcon = false) {
 	code = code.toLowerCase();
-	let path = `/images/mtg/icons/${isColorIcon ? STANDARD_PATH : BLACK_WHITE_PATH}/${code}.png`;
+	let path = `images/mtg/icons/${isColorIcon ? STANDARD_PATH : BLACK_WHITE_PATH}/${code}.png`;
 	return `<img src="${path}" alt="${code}" class="${useSmallIcon ? "mana-symbol-small" : "mana-symbol"}" />`
 }
