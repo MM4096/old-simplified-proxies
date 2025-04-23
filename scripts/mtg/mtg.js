@@ -46,7 +46,7 @@ class Card {
 	}
 }
 
-let templateCard = new Card("Template Card", "{1}{w}{u}{b}{r}{g}{2u}{wp}", "Card Type", "Card Text which supports icon shorthands like \\{t} ({t}) and mana (green) \\{g} ({g}). Phyrexian Mana can be written as color-p (i.e. \\{wp} is phyrexian white {wp}). Dual mana is colorA-colorB (i.e. \\{wu} is white-blue {wu}). Only the \"proper\" dual mana combinations are supported (wu is valid, but uw is not). X costs are \\{x} ({x}), numbers between 0 and 20 are supported (\\{0}: {0}, \\{20}: {20}). 2-or-color is 2-color (i.e. \\{2w} is {2w}) Untap is \\{q} ({q}).", "Power", "Toughness", "Flavor text that doesn't support icons", "Notes can go here", 1);
+let templateCard = new Card("Template Card", "{1}{w}{u}{b}{r}{g}{2u}{wp}", "Card Type", "Card Text which supports icon shorthands like \\{t} ({t}) and mana (green) \\{g} ({g}). Phyrexian Mana can be written as color-p (i.e. \\{wp} is phyrexian white {wp}). Dual mana is colorA-colorB (i.e. \\{wu} is white-blue {wu}). Only the \"proper\" dual mana combinations are supported (wu is valid, but uw is not). X costs are \\{x} ({x}), numbers between 0 and 20 are supported (\\{0}: {0}, \\{20}: {20}). 2-or-color is 2-color (i.e. \\{2w} is {2w}) Untap is \\{q} ({q}).\n\nDon't want to print color icons? Select \"Use black and white icons\" on the left!", "Power", "Toughness", "Flavor text that doesn't support icons", "Notes can go here", 1);
 let cards = []
 let newEditingCard = null;
 let editingIndex = -1;
@@ -66,7 +66,12 @@ function saveCards() {
 function loadCards() {
 	let json = localStorage.getItem("cards");
 	if (json) {
-		cards = JSON.parse(json).map(cardJson => new Card().fromJson(cardJson));
+		json = JSON.parse(json)
+		for (let i = 0; i < json.length; i++) {
+			let card = new Card();
+			card.fromJson(json[i]);
+			cards.push(card);
+		}
 	} else {
 		cards = [];
 	}
@@ -86,9 +91,13 @@ function setPreview(card) {
 	$("#card-preview-flavor-text").text(card.flavorText);
 
 	let card_power_toughness = $("#card-preview-power-toughness");
-	if (card.power && card.toughness) {
+	if (card.power) {
 		card_power_toughness.show()
-		card_power_toughness.text(`${card.power} / ${card.toughness}`);
+		if (card.toughness) {
+			card_power_toughness.text(`${card.power} / ${card.toughness}`);
+		} else {
+			card_power_toughness.text(card.power)
+		}
 	} else {
 		card_power_toughness.hide()
 	}
@@ -141,7 +150,8 @@ function setUpdatingCard(index) {
 
 function updatePreviewCard() {
 	if (getInputCard().isEmpty()) {
-		return;
+		setPreview(templateCard);
+		return
 	}
 	setPreview(getInputCard());
 }
@@ -169,8 +179,7 @@ function updateCardList() {
 			if (newQty <= 0) {
 				cards.splice(i, 1);
 				setUpdatingCard(-1);
-			}
-			else {
+			} else {
 				cards[i].quantity = newQty;
 			}
 			updateCardList();
@@ -200,6 +209,8 @@ $("#add-card").on("click", function (event) {
 	}
 	if (editingIndex < 0) {
 		cards.push(getInputCard());
+		newEditingCard = null;
+		setUpdatingCard(-1)
 	} else {
 		cards[editingIndex] = getInputCard();
 	}
@@ -213,6 +224,19 @@ $("#cancel-button").on("click", function (event) {
 })
 
 $("#delete-save").on("click", function (event) {
+	document.getElementById("confirm-delete-save").showModal()
+	// cards = [];
+	// newEditingCard = null;
+	// saveCards();
+	// setUpdatingCard(-1);
+	// updateCardList();
+})
+
+$("#confirm-delete-save-cancel").on("click", function (event) {
+	document.getElementById("confirm-delete-save").close()
+})
+
+$("#confirm-delete-save-yes").on("click", function (event) {
 	cards = [];
 	newEditingCard = null;
 	saveCards();
