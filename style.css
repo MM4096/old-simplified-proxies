@@ -14,7 +14,11 @@ h2 {
 }
 
 #card-preview-notes {
-	font-size: 0.1in;
+	font-size: 0.09in;
+}
+
+#card-preview-cost > * {
+	margin-left: 0.01in;
 }
 
 #card-preview-power-toughness {
@@ -31,7 +35,7 @@ h2 {
 	max-height: 3.5in;
 	border-radius: 0.125in;
 	border: 1px solid black;
-	font-size: 0.15in;
+	font-size: 0.1in;
 }
 
 .card-container > * {
@@ -40,7 +44,7 @@ h2 {
 }
 
 .card-container h1 {
-	font-size: 0.225in;
+	font-size: 0.125in;
 }
 
 .card-title-block {
@@ -49,11 +53,17 @@ h2 {
 }
 
 .mana-symbol {
-	width: 0.2in;
-	height: 0.2in;
+	width: 0.125in;
+	height: 0.125in;
+	/*margin-top: calc(0.16in * 0.25);*/
+	display: inline-block;
+	/*align-self: flex-start;*/
 }
 
 .mana-symbol-small {
-	width: 0.15in;
-	height: 0.15in;
+	width: 0.1in;
+	height: 0.1in;
+	/*margin-top: calc(0.15in * 0.25);*/
+	display: inline-block;
+	/*align-self: flex-start;*/
 }

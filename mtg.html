@@ -13,19 +13,25 @@
 </head>
 <body data-theme="light" class="min-h-screen bg-base-100 h-min text-2xl md:text-base">
 
-<div class="flex flex-col h-screen overflow-y-auto p-3 gap-2">
+<div class="flex flex-col max-h-screen overflow-y-none p-3 gap-2">
 
-	<div class="flex flex-col gap-2 grow">
+	<div class="flex flex-col gap-2 grow max-h-screen overflow-y-auto">
 		<h1>Magic the Gathering - Simplified Proxies</h1>
-		<div class="flex flex-row gap-2 grow">
+		<div class="flex flex-row gap-2 grow min-h-0">
 
 			<!-- left side -->
 			<div class="flex flex-col gap-2 grow border max-w-1/2">
 
 				<!-- add cards -->
-				<div class="flex flex-col gap-2 p-2">
+				<div class="flex flex-col gap-2 p-2 max-h-full overflow-y-auto">
 					<h2>Add Cards</h2>
 					<div class="flex flex-col gap-2">
+
+						<label class="label text-xs">
+							<input type="checkbox" class="checkbox checkbox-xs checkbox-primary" id="use-black-white-icons"/>
+							Use black and white icons
+						</label>
+
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Card Name</legend>
 							<input type="text" id="card-name" placeholder="e.g. Sakura Tribe Elder"
@@ -56,9 +62,9 @@
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Power / Toughness</legend>
 							<div class="flex flex-row gap-2">
-								<input type="number" id="power" placeholder="e.g. 1" min="0"
+								<input type="text" id="power"
 									   class="input input-bordered grow"/>
-								<input type="number" id="toughness" placeholder="e.g. 1" min="0"
+								<input type="text" id="toughness"
 									   class="input input-bordered grow"/>
 							</div>
 							<p class="label">These can be omitted for non-creatures like lands</p>
@@ -76,25 +82,42 @@
 								   class="input input-bordered grow"/>
 						</fieldset>
 
-						<button id="add-card" class="btn btn-primary">Add</button>
+						<div class="flex flex-row gap-2 w-full">
+							<button id="cancel-button" class="btn btn-secondary grow">Cancel</button>
+							<button id="add-card" class="btn btn-primary grow">Add Card</button>
+						</div>
 					</div>
 				</div>
 
 			</div>
 
 			<!-- right side -->
-			<div class="flex flex-col gap-2 grow border max-w-1/2">
+			<div class="flex row gap-2 grow border max-w-1/2 max-h-full overflow-y-auto">
+
+				<!-- card list -->
+				<div class="flex flex-col gap-2 p-2 grow max-h-full">
+					<h2>Cards</h2>
+					<p>Click a card to see it&apos;s preview</p>
+					<div class="divider p-0 m-0"></div>
+					<div class="flex flex-col overflow-y-auto gap-2 max-h-full overflow-y-auto" id="card-list">
+						<div class="p-3 rounded-md border hover:bg-gray-200">[Card Name]</div>
+					</div>
+				</div>
+
+				<div class="divider divider-horizontal p-0 m-0"></div>
+
 				<!-- current card preview -->
 				<div class="flex flex-col gap-2 p-2">
 					<h2>Preview</h2>
 					<div class="flex flex-col card-container">
 
 						<div class="flex flex-row gap-2 w-full" id="card-preview-title-container">
-							<h1 class="font-bold grow" id="card-preview-title">Title</h1>
-							<div id="card-preview-cost" class="flex flex-row gap-1 items-center">
+							<h1 class="font-bold grow" id="card-preview-title">Template Card</h1>
+							<div id="card-preview-cost" class="flex flex-row items-center">
 
-								<img src="images/mtg/icons/black-white/b.png" alt="B" class="mana-symbol"/>
-								<img src="images/mtg/icons/black-white/w.png" alt="W" class="mana-symbol"/>
+								<img src="images/mtg/icons/standard/b.png" alt="B" class="mana-symbol"/>
+								<img src="images/mtg/icons/standard/w.png" alt="W" class="mana-symbol"/>
+								<img src="images/mtg/icons/standard/up.png" alt="UP" class="mana-symbol"/>
 
 							</div>
 						</div>
@@ -105,9 +128,11 @@
 
 						<div class="divider p-0 m-0"></div>
 
-						<div class="inline-flex whitespace-pre-wrap" id="card-preview-oracle-text">
+						<div class="inline-block whitespace-pre-wrap items-start" id="card-preview-oracle-text">
 							<img src="images/mtg/icons/black-white/t.png" alt="Tap" class="mana-symbol"/> : Sacrifice
 						</div>
+
+						<div class="mb-2"></div>
 
 						<p>
 							<i id="card-preview-flavor-text" class="italic">
@@ -138,7 +163,10 @@
 		</div>
 	</div>
 
-	<a class="btn btn-primary" href="index.html">Back Home</a>
+	<div class="flex flex-row gap-2">
+		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
+		<a class="btn btn-primary" href="index.html">Back Home</a>
+	</div>
 </div>
 
 
