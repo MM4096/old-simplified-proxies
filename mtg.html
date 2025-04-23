@@ -83,7 +83,58 @@
 			</div>
 
 			<!-- right side -->
-			<div class="flex flex-col gap-2 grow border max-w-1/2"></div>
+			<div class="flex flex-col gap-2 grow border max-w-1/2">
+				<!-- current card preview -->
+				<div class="flex flex-col gap-2 p-2">
+					<h2>Preview</h2>
+					<div class="flex flex-col card-container">
+
+						<div class="flex flex-row gap-2 w-full" id="card-preview-title-container">
+							<h1 class="font-bold grow" id="card-preview-title">Title</h1>
+							<div id="card-preview-cost" class="flex flex-row gap-1 items-center">
+
+								<img src="images/mtg/icons/black-white/b.png" alt="B" class="mana-symbol"/>
+								<img src="images/mtg/icons/black-white/w.png" alt="W" class="mana-symbol"/>
+
+							</div>
+						</div>
+
+						<div class="divider p-0 m-0"></div>
+
+						<p id="card-preview-type-line">Creature - I don&apos;t know</p>
+
+						<div class="divider p-0 m-0"></div>
+
+						<div class="inline-flex whitespace-pre-wrap" id="card-preview-oracle-text">
+							<img src="images/mtg/icons/black-white/t.png" alt="Tap" class="mana-symbol"/> : Sacrifice
+						</div>
+
+						<p>
+							<i id="card-preview-flavor-text" class="italic">
+								Description goes here...
+							</i>
+						</p>
+
+
+						<div class="grow"></div>
+
+						<div class="flex flex-row items-end gap-2" id="card-preview-type-container">
+							<p>
+								<i id="card-preview-notes" class="italic">
+									This is a note!
+								</i>
+							</p>
+
+							<div class="grow"></div>
+
+							<p id="card-preview-power-toughness">4 / 4</p>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -91,6 +142,7 @@
 </div>
 
 
-<script src="scripts/mtg.js" type="application/javascript"></script>
+<script src="scripts/mtg/mtg_icon_database.js" type="application/javascript"></script>
+<script src="scripts/mtg/mtg.js" type="application/javascript"></script>
 </body>
 </html>
