@@ -36,13 +36,6 @@ h2 {
 	margin-left: 0.01in;
 }
 
-.card-power-toughness {
-	padding: 0.05in;
-	margin: 0.05in 0;
-	border: 1px solid black;
-	border-radius: 0.1in;
-}
-
 .card-container {
 	width: 2.5in;
 	height: 3.5in;
@@ -86,14 +79,25 @@ h2 {
 	font-style: italic;
 }
 
-.card-type-container {
+.card-bottom-container {
 	display: flex;
 	flex-direction: row;
 	gap: 0.05in;
+	justify-items: baseline;
+	margin-bottom: 0.05in;
 }
 
-.card-type-container p:first-of-type {
+.card-bottom-container p:first-of-type {
+	font-style: italic;
 	flex-grow: 1;
+	height: min-content;
+	margin-top: auto;
+}
+
+.card-power-toughness {
+	padding: 0.05in;
+	border: 1px solid black;
+	border-radius: 0.1in;
 }
 
 .card-container .grow {

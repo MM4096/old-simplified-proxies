@@ -83,10 +83,8 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	<div class="mb-2"></div>
 	<p><i class="card-flavor-text">${card.flavorText || ""}</i></p>
 	<div class="grow"></div>
-	<div class="card-type-container">
-		<p>
-			<i class="card-notes">${card.notes || ""}</i>
-		</p>
+	<div class="card-bottom-container">
+		<p class="card-notes">${card.notes || ""}</p>
 		${powerToughnessText !== "" ? `<p class="card-power-toughness">${powerToughnessText}</p>` : ""}
 	</div>
 </div>
