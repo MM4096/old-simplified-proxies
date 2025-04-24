@@ -227,7 +227,7 @@ function printProxies() {
 	printWin.onload = function () {
 		printWin.focus();
 		printWin.print();
-		// printWin.close();
+		printWin.close();
 	}
 }
 
