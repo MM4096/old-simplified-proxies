@@ -1,0 +1,19 @@
+@page {
+	size: A4;
+	margin: 0;
+}
+
+body {
+	width: 100%;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 2.5in);
+	grid-gap: 0.1in;
+	justify-content: center;
+	padding: 0.1in;
+}
+
+body .card-container {
+	box-sizing: border-box;
+	margin: 0.1in;
+}

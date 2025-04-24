@@ -25,7 +25,7 @@
 				<!-- add cards -->
 				<div class="flex flex-col gap-2 p-2 max-h-full overflow-y-auto">
 					<h2>Add Cards</h2>
-					<div class="flex flex-col gap-2">
+					<div class="flex flex-col gap-2 overflow-y-auto">
 
 						<label class="label text-xs">
 							<input type="checkbox" class="checkbox checkbox-xs checkbox-primary" id="use-black-white-icons"/>
@@ -67,7 +67,7 @@
 								<input type="text" id="toughness"
 									   class="input input-bordered grow"/>
 							</div>
-							<p class="label">These can be omitted for non-creatures like lands</p>
+							<p class="label">These can be omitted for non-creatures like lands.<br>If planeswalker loyalty is desired, setting only Power will work.</p>
 						</fieldset>
 
 						<fieldset class="fieldset">
@@ -81,11 +81,11 @@
 							<input type="text" id="notes" placeholder=""
 								   class="input input-bordered grow"/>
 						</fieldset>
+					</div>
 
-						<div class="flex flex-row gap-2 w-full">
-							<button id="cancel-button" class="btn btn-secondary grow">Cancel</button>
-							<button id="add-card" class="btn btn-primary grow">Add Card</button>
-						</div>
+					<div class="flex flex-row gap-2 w-full">
+						<button id="cancel-button" class="btn btn-secondary grow">Cancel</button>
+						<button id="add-card" class="btn btn-primary grow">Add Card</button>
 					</div>
 				</div>
 
@@ -107,13 +107,13 @@
 				<div class="divider divider-horizontal p-0 m-0"></div>
 
 				<!-- current card preview -->
-				<div class="flex flex-col gap-2 p-2">
+				<div class="flex flex-col gap-2 p-2" id="card-preview-container">
 					<h2>Preview</h2>
-					<div class="flex flex-col card-container">
+					<div class="flex flex-col card-container" id="card-preview">
 
-						<div class="flex flex-row gap-2 w-full" id="card-preview-title-container">
-							<h1 class="font-bold grow" id="card-preview-title">Template Card</h1>
-							<div id="card-preview-cost" class="flex flex-row items-center">
+						<div class="flex flex-row gap-2 w-full card-title-container">
+							<h1 class="font-bold grow card-title">Template Card</h1>
+							<div class="flex flex-row items-center card-mana-cost">
 
 								<img src="images/mtg/icons/standard/b.png" alt="B" class="mana-symbol"/>
 								<img src="images/mtg/icons/standard/w.png" alt="W" class="mana-symbol"/>
@@ -124,18 +124,18 @@
 
 						<div class="divider p-0 m-0"></div>
 
-						<p id="card-preview-type-line">Creature - I don&apos;t know</p>
+						<p class="card-type-line">Creature - I don&apos;t know</p>
 
 						<div class="divider p-0 m-0"></div>
 
-						<div class="inline-block whitespace-pre-wrap items-start" id="card-preview-oracle-text">
+						<div class="inline-block whitespace-pre-wrap items-start card-oracle-text">
 							<img src="images/mtg/icons/black-white/t.png" alt="Tap" class="mana-symbol"/> : Sacrifice
 						</div>
 
 						<div class="mb-2"></div>
 
 						<p>
-							<i id="card-preview-flavor-text" class="italic">
+							<i class="card-flavor-text italic">
 								Description goes here...
 							</i>
 						</p>
@@ -143,16 +143,16 @@
 
 						<div class="grow"></div>
 
-						<div class="flex flex-row items-end gap-2" id="card-preview-type-container">
+						<div class="flex flex-row items-end gap-2 card-type-container">
 							<p>
-								<i id="card-preview-notes" class="italic">
+								<i class="card-notes italic">
 									This is a note!
 								</i>
 							</p>
 
 							<div class="grow"></div>
 
-							<p id="card-preview-power-toughness">4 / 4</p>
+							<p class="card-power-toughness">4 / 4</p>
 
 						</div>
 
@@ -165,6 +165,7 @@
 
 	<div class="flex flex-row gap-2">
 		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
+		<button class="btn btn-accent" id="print-proxies">Print Proxies</button>
 		<a class="btn btn-primary" href="index.html">Back Home</a>
 	</div>
 </div>

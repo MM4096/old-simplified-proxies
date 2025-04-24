@@ -58,6 +58,41 @@ $(document).ready(function () {
 	updateCardList();
 })
 
+function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
+	let powerToughnessText = "";
+	if (card.power) {
+		if (card.toughness) {
+			powerToughnessText = `${card.power} / ${card.toughness}`
+		}
+		else {
+			powerToughnessText = card.power;
+		}
+	}
+
+	return `
+<div class="card-container" id="${id}">
+	<div class="card-title-container">
+		<h1 class="card-title">${card.name || ""}</h1>
+		<div class="card-mana-cost">${getIconObject(card.manaCost || "", useBlackWhiteIcons, false)}</div>
+	</div>
+	<div class="card-divider p-0 m-0"></div>
+	
+	<p class="card-type-line">${card.type || ""}</p>
+	<div class="card-divider p-0 m-0"></div>
+	<div class="card-oracle-text">${convertStringToIconObject(card.text || "", useBlackWhiteIcons, true)}</div>
+	<div class="mb-2"></div>
+	<p><i class="card-flavor-text">${card.flavorText || ""}</i></p>
+	<div class="grow"></div>
+	<div class="card-type-container">
+		<p>
+			<i class="card-notes">${card.notes || ""}</i>
+		</p>
+		${powerToughnessText !== "" ? `<p class="card-power-toughness">${powerToughnessText}</p>` : ""}
+	</div>
+</div>
+`;
+}
+
 function saveCards() {
 	let json = JSON.stringify(cards.map(card => card.toJson()));
 	localStorage.setItem("cards", json);
@@ -80,29 +115,8 @@ function loadCards() {
 function setPreview(card) {
 	let useColorIcon = !$("#use-black-white-icons").is(":checked");
 
-	$("#card-preview-title").text(card.name);
-
-	$("#card-preview-cost").html(getIconObject(card.manaCost, useColorIcon, false));
-	$("#card-preview-type-line").text(card.type);
-
-
-	let formattedText = card.text.replace(/\n/g, "<br>");
-	$("#card-preview-oracle-text").html(convertStringToIconObject(formattedText, useColorIcon, true));
-	$("#card-preview-flavor-text").text(card.flavorText);
-
-	let card_power_toughness = $("#card-preview-power-toughness");
-	if (card.power) {
-		card_power_toughness.show()
-		if (card.toughness) {
-			card_power_toughness.text(`${card.power} / ${card.toughness}`);
-		} else {
-			card_power_toughness.text(card.power)
-		}
-	} else {
-		card_power_toughness.hide()
-	}
-
-	$("#card-preview-notes").text(card.notes);
+	$("#card-preview").remove();
+	$("#card-preview-container").append(createCardHTML(card, useColorIcon, "card-preview"));
 }
 
 function getInputCard() {
@@ -191,6 +205,36 @@ function updateCardList() {
 	}
 }
 
+function printProxies() {
+	let printCardsHtml = ""
+	let useBlackWhiteIcons = $("#use-black-white-icons").is(":checked");
+
+	for (let i = 0; i < cards.length; i++) {
+		let thisCard = cards[i];
+		for (let j = 0; j < thisCard.quantity; j++) {
+			printCardsHtml += createCardHTML(thisCard, useBlackWhiteIcons, `card-proxy-${thisCard.name}-${j}`);
+		}
+	}
+
+	let printWin = window.open("", "_blank");
+	printWin.document.write(`
+<!DOCTYPE html><html lang="en"><head><title>Print Proxies</title><link rel="stylesheet" href="style.css"/><link rel="stylesheet" href="print.css"/></head>
+<body>${printCardsHtml}
+</body></html>
+`);
+	printWin.document.close();
+
+	printWin.onload = function () {
+		printWin.focus();
+		printWin.print();
+		// printWin.close();
+	}
+}
+
+onload = function (event) {
+	console.log("Onload")
+}
+
 $("input").on("keyup", function (event) {
 	updatePreviewCard();
 })
@@ -225,11 +269,6 @@ $("#cancel-button").on("click", function (event) {
 
 $("#delete-save").on("click", function (event) {
 	document.getElementById("confirm-delete-save").showModal()
-	// cards = [];
-	// newEditingCard = null;
-	// saveCards();
-	// setUpdatingCard(-1);
-	// updateCardList();
 })
 
 $("#confirm-delete-save-cancel").on("click", function (event) {
@@ -242,4 +281,8 @@ $("#confirm-delete-save-yes").on("click", function (event) {
 	saveCards();
 	setUpdatingCard(-1);
 	updateCardList();
+})
+
+$("#print-proxies").on("click", function (event) {
+	printProxies();
 })
