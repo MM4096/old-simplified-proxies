@@ -205,7 +205,8 @@ function updateCardList() {
 
 function printProxies() {
 	let printCardsHtml = ""
-	let useBlackWhiteIcons = $("#use-black-white-icons").is(":checked");
+	// Don't know why this doesn't work normally, so I inverted it
+	let useBlackWhiteIcons = !$("#use-black-white-icons").is(":checked");
 
 	for (let i = 0; i < cards.length; i++) {
 		let thisCard = cards[i];
