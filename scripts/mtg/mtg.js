@@ -230,10 +230,6 @@ function printProxies() {
 	}
 }
 
-onload = function (event) {
-	console.log("Onload")
-}
-
 $("input").on("keyup", function (event) {
 	updatePreviewCard();
 })

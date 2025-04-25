@@ -50,5 +50,5 @@ function getIconCode(code, isColorIcon = true, useSmallIcon = false) {
 	code = code.replaceAll("/", "");
 	let path = `images/mtg/icons/${isColorIcon ? STANDARD_PATH : BLACK_WHITE_PATH}/${code}.png`;
 	let fallbackPath = `images/mtg/icons/${STANDARD_PATH}/${code}.png`;
-	return `<img src="${path}" alt="${code}" class="${useSmallIcon ? "mana-symbol-small" : "mana-symbol"}" onerror="this.src ='${fallbackPath}'" />`
+	return `<img src="${path}" alt="${code}" class="${useSmallIcon ? "mana-symbol-small" : "mana-symbol"}" onerror="if (this.src !== '${fallbackPath}' && !this.dataset.fallback) {  this.dataset.fallback='true'; this.src='${fallbackPath}';}" />`
 }
