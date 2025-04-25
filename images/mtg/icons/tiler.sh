@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 input="Mana-BW.png"
 tile_w=100
