@@ -33,11 +33,21 @@
 							Use black and white icons
 						</label>
 
-						<label class="label text-xs">
+						<div class="label text-xs">
 							<input type="checkbox" class="checkbox checkbox-xs checkbox-secondary"
 								   id="use-scryfall-search"/>
 							Use Scryfall search
-						</label>
+							<div class="tooltip tooltip-bottom" data-tip="">
+								<div class="tooltip-content">
+									Scryfall Search
+									<br>
+									If enabled, you can press <code>Enter</code> in the card name field to fill in the rest of the information automatically.
+									<br>
+									The card name must <i>exactly</i> match an existing card.
+								</div>
+								<i class="bi-info-circle-fill ml-1"></i>
+							</div>
+						</div>
 
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Card Name</legend>
@@ -200,6 +210,8 @@
 <dialog id="credits-box" class="modal">
 	<div class="modal-box">
 		<h2>Credits</h2>
+		<br>
+		Scryfall Search API: <a href="https://scryfall.com/" target="_blank" class="link">Scryfall</a>
 		<br>
 		Colored Mana Icons: <a href="https://scryfall.com/" target="_blank" class="link">Scryfall</a> (adapted by me)
 		<br>
