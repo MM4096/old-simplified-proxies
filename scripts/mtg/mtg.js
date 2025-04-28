@@ -63,8 +63,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	if (card.power) {
 		if (card.toughness) {
 			powerToughnessText = `${card.power} / ${card.toughness}`
-		}
-		else {
+		} else {
 			powerToughnessText = card.power;
 		}
 	}
@@ -284,4 +283,50 @@ $("#print-proxies").on("click", function (event) {
 
 $("#credits").on("click", function (event) {
 	document.getElementById("credits-box").showModal()
+})
+
+$("#use-scryfall-search").on("click", function (event) {
+	let useScryfallSearch = $("#use-scryfall-search").is(":checked");
+	if (useScryfallSearch) {
+		$("#scryfall-search-results").attr("hidden", false);
+	} else {
+		$("#scryfall-search-results").attr("hidden", true);
+	}
+})
+
+
+let isSearching = false;
+$("#card-name").on("keyup", function (event) {
+	if (event.key !== "Enter") {
+		return;
+	}
+	let useScryfallSearch = $("#use-scryfall-search").is(":checked");
+	let cardName = $("#card-name").val();
+	if (useScryfallSearch && !isSearching && cardName !== "") {
+		isSearching = true;
+		fetch(`https://api.scryfall.com/cards/named?exact=${cardName}`).then((result) => {
+			result.json().then((json) => {
+				if (json.status && json.status !== 200) {
+
+				} else {
+					$("#card-name").val(json.name);
+					$("#type-line").val(json["type_line"]);
+					$("#oracle-text").val(json["oracle_text"]);
+					$("#flavor-text").val(json["flavor_text"] || "");
+					$("#mana-cost").val(json["mana_cost"] || "");
+					$("#power").val(json["power"] || "");
+					$("#toughness").val(json["toughness"] || "");
+					$("#notes").val(json["notes"] || "");
+					setUpdatingCard(-1);
+					updatePreviewCard();
+					updateCardList();
+					saveCards();
+				}
+			})
+		}).catch((e) => {
+
+		}).finally(() => {
+			isSearching = false;
+		})
+	}
 })
