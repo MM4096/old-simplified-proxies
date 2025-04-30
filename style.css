@@ -80,6 +80,13 @@ h2 {
 .card-oracle-text {
 	display: inline-block;
 	white-space: pre-wrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.card-reverse {
+	max-height: 50%;
+	overflow: hidden;
 }
 
 .card-flavor-text {

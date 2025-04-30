@@ -100,6 +100,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 			}
 		}
 		reverseFace = `
+<div class="card-divider"></div>
 <div class="card-reverse">
 <div class="card-title-container">
 	<h1 class="reverse-card-title">${card.reverseName || ""}</h1>
@@ -114,7 +115,6 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 <p class="grow"></p>
 		${reversePowerToughnessText !== "" ? `<p class="card-power-toughness">${reversePowerToughnessText}</p>` : ""}
 </div>
-<div class="card-divider"></div>
 </div>`
 	}
 
@@ -371,12 +371,21 @@ $("#card-name").on("keyup", function (event) {
 	}
 	let useScryfallSearch = $("#use-scryfall-search").is(":checked");
 	let cardName = $("#card-name").val();
+	let errorTextLabel = $("#scryfall-result-error")
+
+	errorTextLabel.text("");
+
 	if (useScryfallSearch && !isSearching && cardName !== "") {
 		isSearching = true;
 		fetch(`https://api.scryfall.com/cards/named?exact=${cardName}`).then((result) => {
 			result.json().then((json) => {
 				if (json.status && json.status !== 200) {
-
+					if (json.status === 404) {
+						errorTextLabel.text(`Card not Found`);
+					}
+					else {
+						errorTextLabel.text(`Error: ${json.status} ${json.details}`);
+					}
 				} else {
 					let faceData = [json]
 					if (json.hasOwnProperty("card_faces")) {
