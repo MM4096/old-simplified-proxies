@@ -94,6 +94,39 @@
 									  placeholder="e.g. There were no tombstones in orochi territory. Slain warriors were buried with a tree sapling, so they would become a part of the forest after death."></textarea>
 						</fieldset>
 
+						<div class="collapse bg-base-100 border flex-none">
+							<input type="checkbox"/>
+							<div class="collapse-title">Dual-Faced Cards</div>
+							<div class="collapse-content">
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Reverse Name</legend>
+									<input id="reverse-card-name" class="input" />
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Reverse Mana Cost</legend>
+									<input id="reverse-mana-cost" class="input" />
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Reverse Type Line</legend>
+									<input id="reverse-type-line" class="input" />
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Reverse Oracle Text</legend>
+									<textarea id="reverse-oracle-text" class="input input-bordered grow text-wrap min-h-20"></textarea>
+								</fieldset>
+
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Reverse Power / Toughness</legend>
+									<div class="flex flex-row gap-2">
+										<input type="text" id="reverse-power"
+											   class="input input-bordered grow"/>
+										<input type="text" id="reverse-toughness"
+											   class="input input-bordered grow"/>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Notes</legend>
 							<input type="text" id="notes" placeholder=""

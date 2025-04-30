@@ -1,5 +1,6 @@
 class Card {
-	constructor(name = "", manaCost = "", type = "", text = "", power = "", toughness = "", flavorText = "", notes = "", quantity = 1) {
+	constructor(name = "", manaCost = "", type = "", text = "", power = "", toughness = "", flavorText = "", notes = "", quantity = 1,
+				reverseName = "", reverseManaCost = "", reverseType = "", reverseText = "", reversePower = "", reverseToughness = "") {
 		this.name = name;
 		this.manaCost = manaCost;
 		this.type = type;
@@ -9,14 +10,21 @@ class Card {
 		this.flavorText = flavorText;
 		this.notes = notes;
 		this.quantity = quantity;
+
+		this.reverseName = reverseName;
+		this.reverseManaCost = reverseManaCost;
+		this.reverseType = reverseType;
+		this.reverseText = reverseText;
+		this.reversePower = reversePower;
+		this.reverseToughness = reverseToughness;
 	}
 
 	toString() {
-		return `Card(${this.name}, ${this.manaCost}, ${this.type}, ${this.text}, ${this.power}, ${this.toughness}, ${this.flavorText}, ${this.notes})`;
+		return `Card(${this.name}, ${this.manaCost}, ${this.type}, ${this.text}, ${this.power}, ${this.toughness}, ${this.flavorText}, ${this.notes}, ${this.quantity}, ${this.reverseName}, ${this.reverseManaCost}, ${this.reverseType}, ${this.reverseText}, ${this.reversePower}, ${this.reverseToughness})`;
 	}
 
 	isEmpty() {
-		return this.name === "" && this.manaCost === "" && this.type === "" && this.text === "" && this.power === "" && this.toughness === "" && this.flavorText === "" && this.notes === "";
+		return this.name === "" && this.manaCost === "" && this.type === "" && this.text === "" && this.power === "" && this.toughness === "" && this.flavorText === "" && this.notes === "" && this.reverseName === "" && this.reverseManaCost === "" && this.reverseType === "" && this.reverseText === "" && this.reversePower === "" && this.reverseToughness === "";
 	}
 
 	toJson() {
@@ -29,7 +37,13 @@ class Card {
 			toughness: this.toughness,
 			flavorText: this.flavorText,
 			notes: this.notes,
-			quantity: this.quantity
+			quantity: this.quantity,
+			reverseName: this.reverseName,
+			reverseManaCost: this.reverseManaCost,
+			reverseType: this.reverseType,
+			reverseText: this.reverseText,
+			reversePower: this.reversePower,
+			reverseToughness: this.reverseToughness,
 		}
 	}
 
@@ -43,6 +57,12 @@ class Card {
 		this.flavorText = json.flavorText;
 		this.notes = json.notes;
 		this.quantity = json.quantity;
+		this.reverseName = json.reverseName;
+		this.reverseManaCost = json.reverseManaCost;
+		this.reverseType = json.reverseType;
+		this.reverseText = json.reverseText;
+		this.reversePower = json.reversePower;
+		this.reverseToughness = json.reverseToughness;
 	}
 }
 
@@ -68,6 +88,36 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 		}
 	}
 
+	let usesReverseFace = card.reverseName|| card.reverseManaCost|| card.reverseType|| card.reverseText|| card.reversePower|| card.reverseToughness;
+	let reverseFace = "";
+	if (usesReverseFace) {
+		let reversePowerToughnessText = "";
+		if (card.reversePower) {
+			if (card.reverseToughness) {
+				reversePowerToughnessText = `${card.reversePower} / ${card.reverseToughness}`
+			} else {
+				reversePowerToughnessText = card.reversePower;
+			}
+		}
+		reverseFace = `
+<div class="card-reverse">
+<div class="card-title-container">
+	<h1 class="reverse-card-title">${card.reverseName || ""}</h1>
+	<div class="reverse-card-mana-cost">${getIconObject(card.reverseManaCost || "", useBlackWhiteIcons, false)}</div>
+</div>
+<div class="card-divider p-0 m-0"></div>
+<p class="reverse-card-type-line">${card.reverseType || ""}</p>
+<div class="card-divider p-0 m-0"></div>
+<div class="reverse-card-oracle-text card-oracle-text">${convertStringToIconObject(card.reverseText || "", useBlackWhiteIcons, true)}</div>
+<div class="grow"></div>
+<div class="card-bottom-container">
+<p class="grow"></p>
+		${reversePowerToughnessText !== "" ? `<p class="card-power-toughness">${reversePowerToughnessText}</p>` : ""}
+</div>
+<div class="card-divider"></div>
+</div>`
+	}
+
 	return `
 <div class="card-container" id="${id}">
 	<div class="card-title-container">
@@ -79,13 +129,13 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	<p class="card-type-line">${card.type || ""}</p>
 	<div class="card-divider p-0 m-0"></div>
 	<div class="card-oracle-text">${convertStringToIconObject(card.text || "", useBlackWhiteIcons, true)}</div>
-	<div class="mb-2"></div>
 	<p><i class="card-flavor-text">${card.flavorText || ""}</i></p>
 	<div class="grow"></div>
 	<div class="card-bottom-container">
 		<p class="card-notes">${card.notes || ""}</p>
 		${powerToughnessText !== "" ? `<p class="card-power-toughness">${powerToughnessText}</p>` : ""}
 	</div>
+	${reverseFace}
 </div>
 `;
 }
@@ -125,7 +175,14 @@ function getInputCard() {
 		$("#power").val(),
 		$("#toughness").val(),
 		$("#flavor-text").val(),
-		$("#notes").val()
+		$("#notes").val(),
+		1,
+		$("#reverse-card-name").val(),
+		$("#reverse-mana-cost").val(),
+		$("#reverse-type-line").val(),
+		$("#reverse-oracle-text").val(),
+		$("#reverse-power").val(),
+		$("#reverse-toughness").val()
 	)
 }
 
@@ -138,6 +195,12 @@ function loadCardIntoInput(card) {
 	$("#toughness").val(card.toughness);
 	$("#flavor-text").val(card.flavorText);
 	$("#notes").val(card.notes);
+	$("#reverse-card-name").val(card.reverseName);
+	$("#reverse-mana-cost").val(card.reverseManaCost);
+	$("#reverse-type-line").val(card.reverseType);
+	$("#reverse-oracle-text").val(card.reverseText);
+	$("#reverse-power").val(card.reversePower);
+	$("#reverse-toughness").val(card.reverseToughness);
 }
 
 function setUpdatingCard(index) {
@@ -309,14 +372,59 @@ $("#card-name").on("keyup", function (event) {
 				if (json.status && json.status !== 200) {
 
 				} else {
-					$("#card-name").val(json.name);
-					$("#type-line").val(json["type_line"]);
-					$("#oracle-text").val(json["oracle_text"]);
-					$("#flavor-text").val(json["flavor_text"] || "");
-					$("#mana-cost").val(json["mana_cost"] || "");
-					$("#power").val(json["power"] || "");
-					$("#toughness").val(json["toughness"] || "");
-					$("#notes").val(json["notes"] || "");
+					let faceData = [json]
+					if (json.hasOwnProperty("card_faces")) {
+						faceData = json.card_faces;
+					}
+
+					$("#card-name").val();
+					$("#type-line").val();
+					$("#oracle-text").val();
+					$("#flavor-text").val();
+					$("#mana-cost").val();
+					$("#power").val();
+					$("#toughness").val();
+					$("#notes").val();
+					$("#reverse-card-name").val();
+					$("#reverse-mana-cost").val();
+					$("#reverse-type-line").val();
+					$("#reverse-oracle-text").val();
+					$("#reverse-power").val();
+					$("#reverse-toughness").val();
+
+					let setNormalInputs = true
+					for (let i = 0; i < faceData.length; i++) {
+						let thisData = faceData[i];
+						if (setNormalInputs) {
+							setNormalInputs = false
+							$("#card-name").val(thisData.name);
+							$("#type-line").val(thisData["type_line"]);
+							$("#oracle-text").val(thisData["oracle_text"]);
+							$("#flavor-text").val(thisData["flavor_text"] || "");
+							$("#mana-cost").val(thisData["mana_cost"] || "");
+							$("#power").val(thisData["power"] || "");
+							$("#toughness").val(json["toughness"] || "");
+							$("#notes").val(json["notes"] || "");
+
+							if (json.hasOwnProperty("loyalty")) {
+								$("#power").val(json["loyalty"]);
+							}
+						}
+						else {
+							$("#reverse-card-name").val(thisData.name);
+							$("#reverse-mana-cost").val(thisData["mana_cost"] || "");
+							$("#reverse-type-line").val(thisData["type_line"]);
+							$("#reverse-oracle-text").val(thisData["oracle_text"]);
+							$("#reverse-power").val(thisData["power"] || "");
+							$("#reverse-toughness").val(json["toughness"] || "");
+
+							if (json.hasOwnProperty("loyalty")) {
+								$("#reverse-power").val(json["loyalty"]);
+							}
+
+						}
+					}
+
 					setUpdatingCard(-1);
 					updatePreviewCard();
 					updateCardList();

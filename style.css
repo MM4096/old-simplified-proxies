@@ -48,11 +48,18 @@ h2 {
 
 	display: flex;
 	flex-direction: column;
+
+	font-family: sans-serif;
+	line-height: 1.5;
 }
 
 .card-container > * {
 	padding-left: 0.1in;
 	padding-right: 0.1in;
+}
+
+.card-container * {
+	margin: 0;
 }
 
 .card-container h1 {
@@ -118,4 +125,8 @@ h2 {
 	/*margin-top: calc(0.15in * 0.25);*/
 	display: inline-block;
 	/*align-self: flex-start;*/
+}
+
+.card-reverse {
+	transform: rotate(180deg);
 }
