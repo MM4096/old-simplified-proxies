@@ -240,9 +240,15 @@ function updateCardList() {
 
 	for (let i = 0; i < cards.length; i++) {
 		let thisCard = cards[i];
+
+		let cardName = thisCard.name;
+		if (thisCard.reverseName) {
+			cardName = `${thisCard.name} // ${thisCard.reverseName}`
+		}
+
 		cardList.append(`
 <div class="p-3 rounded-md border hover:bg-gray-200 flex flex-row items-center" id="card-list-item-${i}">
-<span class="grow">${thisCard.name}</span>
+<span class="grow">${cardName}</span>
 <div class="divider divider-horizontal p-0 m-0"></div>
 <span class="italic">Qty:</span>
 <input type="number" class="input input-ghost p-0 input-sm m-0 max-w-1/5 card-list-qty-input" value="${thisCard.quantity}"/>
