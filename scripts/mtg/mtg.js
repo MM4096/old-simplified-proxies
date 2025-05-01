@@ -66,7 +66,7 @@ class Card {
 	}
 }
 
-let templateCard = new Card("Template Card", "{1}{w}{u}{b}{r}{g}{2u}{wp}", "Card Type", "Card Text which supports icon shorthands like \\{t} ({t}) and mana (green) \\{g} ({g}). Phyrexian Mana can be written as color-p (i.e. \\{wp} is phyrexian white {wp}). Dual mana is colorA-colorB (i.e. \\{wu} is white-blue {wu}). Only the \"proper\" dual mana combinations are supported (wu is valid, but uw is not). X costs are \\{x} ({x}), numbers between 0 and 20 are supported (\\{0}: {0}, \\{20}: {20}). 2-or-color is 2-color (i.e. \\{2w} is {2w}). Double Phyrexian mana symbols follow the format first-second-p (i.e. \\{wbp} is {wbp}). Untap is \\{q} ({q}).\n\nDon't want to print color icons? Select \"Use black and white icons\" on the left!", "Power", "Toughness", "Flavor text that doesn't support icons", "Notes can go here", 1);
+let templateCard = new Card("Preview Card", "{1}{w}{u}{b}{r}{g}{2u}{wp}", "Card Type", "Card Text which supports icon shorthands like \\{t} ({t}) and mana (green) \\{g} ({g}). Phyrexian Mana can be written as color-p (i.e. \\{wp} is phyrexian white {wp}). Dual mana is colorA-colorB (i.e. \\{wu} is white-blue {wu}). Only the \"proper\" dual mana combinations are supported (wu is valid, but uw is not). X costs are \\{x} ({x}), numbers between 0 and 20 are supported (\\{0}: {0}, \\{20}: {20}). 2-or-color is 2-color (i.e. \\{2w} is {2w}). Double Phyrexian mana symbols follow the format first-second-p (i.e. \\{wbp} is {wbp}). Untap is \\{q} ({q}).\n\nDon't want to print color icons? Select \"Use black and white icons\" on the left!", "Power", "Toughness", "Flavor text that doesn't support icons", "Notes can go here", 1);
 let cards = []
 let newEditingCard = null;
 let editingIndex = -1;
@@ -88,7 +88,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 		}
 	}
 
-	let usesReverseFace = card.reverseName|| card.reverseManaCost|| card.reverseType|| card.reverseText|| card.reversePower|| card.reverseToughness;
+	let usesReverseFace = card.reverseName || card.reverseManaCost || card.reverseType || card.reverseText || card.reversePower || card.reverseToughness;
 	let reverseFace = "";
 	if (usesReverseFace) {
 		let reversePowerToughnessText = "";
@@ -129,6 +129,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	<p class="card-type-line">${card.type || ""}</p>
 	<div class="card-divider p-0 m-0"></div>
 	<div class="card-oracle-text">${convertStringToIconObject(card.text || "", useBlackWhiteIcons, true)}</div>
+	<div style="margin-bottom: 0.1in;"></div>
 	<p><i class="card-flavor-text">${card.flavorText || ""}</i></p>
 	<div class="grow"></div>
 	<div class="card-bottom-container">
@@ -157,6 +158,23 @@ function loadCards() {
 	} else {
 		cards = [];
 	}
+}
+
+function clearInputs() {
+	$("#card-name").val("");
+	$("#mana-cost").val("");
+	$("#type-line").val("");
+	$("#oracle-text").val("");
+	$("#power").val("");
+	$("#toughness").val("");
+	$("#flavor-text").val("");
+	$("#notes").val("");
+	$("#reverse-card-name").val("");
+	$("#reverse-mana-cost").val("");
+	$("#reverse-type-line").val("");
+	$("#reverse-oracle-text").val("");
+	$("#reverse-power").val("");
+	$("#reverse-toughness").val("");
 }
 
 function setPreview(card) {
@@ -298,6 +316,51 @@ function printProxies() {
 	}
 }
 
+function showError(errorText) {
+	$("#error-message").text(errorText);
+	document.getElementById("error-box").showModal();
+}
+
+function scryfallResultToCardObject(scryfallResult) {
+	let card = new Card();
+
+	let faceData = [scryfallResult]
+	if (scryfallResult.hasOwnProperty("card_faces")) {
+		faceData = scryfallResult.card_faces;
+	}
+
+	let setNormalInputs = true
+	for (let i = 0; i < faceData.length; i++) {
+		let thisData = faceData[i];
+		if (setNormalInputs) {
+			setNormalInputs = false
+			card.name = thisData.name;
+			card.type = thisData["type_line"] || "";
+			card.text = thisData["oracle_text"] || "";
+			card.flavorText = thisData["flavor_text"] || "";
+			card.manaCost = thisData["mana_cost"] || "";
+			card.power = thisData["power"] || "";
+			card.toughness = thisData["toughness"] || "";
+
+			if (thisData.hasOwnProperty("loyalty")) {
+				card.power = thisData["loyalty"];
+			}
+		} else {
+			card.reverseName = thisData.name;
+			card.reverseManaCost = thisData["mana_cost"] || "";
+			card.reverseType = thisData["type_line"] || "";
+			card.reverseText = thisData["oracle_text"] || "";
+			card.reversePower = thisData["power"] || "";
+			card.reverseToughness = thisData["toughness"] || "";
+
+			if (thisData.hasOwnProperty("loyalty")) {
+				card.reversePower = thisData["loyalty"];
+			}
+		}
+	}
+	return card;
+}
+
 $("input").on("keyup", function (event) {
 	updatePreviewCard();
 })
@@ -341,9 +404,12 @@ $("#confirm-delete-save-cancel").on("click", function (event) {
 $("#confirm-delete-save-yes").on("click", function (event) {
 	cards = [];
 	newEditingCard = null;
+	clearInputs();
 	saveCards();
 	setUpdatingCard(-1);
 	updateCardList();
+
+	document.getElementById("confirm-delete-save").close()
 })
 
 $("#print-proxies").on("click", function (event) {
@@ -382,8 +448,7 @@ $("#card-name").on("keyup", function (event) {
 				if (json.status && json.status !== 200) {
 					if (json.status === 404) {
 						errorTextLabel.text(`Card not Found`);
-					}
-					else {
+					} else {
 						errorTextLabel.text(`Error: ${json.status} ${json.details}`);
 					}
 				} else {
@@ -392,20 +457,7 @@ $("#card-name").on("keyup", function (event) {
 						faceData = json.card_faces;
 					}
 
-					$("#card-name").val();
-					$("#type-line").val();
-					$("#oracle-text").val();
-					$("#flavor-text").val();
-					$("#mana-cost").val();
-					$("#power").val();
-					$("#toughness").val();
-					$("#notes").val();
-					$("#reverse-card-name").val();
-					$("#reverse-mana-cost").val();
-					$("#reverse-type-line").val();
-					$("#reverse-oracle-text").val();
-					$("#reverse-power").val();
-					$("#reverse-toughness").val();
+					clearInputs();
 
 					let setNormalInputs = true
 					for (let i = 0; i < faceData.length; i++) {
@@ -424,8 +476,7 @@ $("#card-name").on("keyup", function (event) {
 							if (json.hasOwnProperty("loyalty")) {
 								$("#power").val(json["loyalty"]);
 							}
-						}
-						else {
+						} else {
 							$("#reverse-card-name").val(thisData.name);
 							$("#reverse-mana-cost").val(thisData["mana_cost"] || "");
 							$("#reverse-type-line").val(thisData["type_line"]);
@@ -452,4 +503,138 @@ $("#card-name").on("keyup", function (event) {
 			isSearching = false;
 		})
 	}
+})
+
+$("#clear-card").on("click", function (event) {
+	clearInputs();
+	setUpdatingCard(-1);
+	updatePreviewCard();
+})
+
+$("#import-cards").on("click", function (event) {
+	document.getElementById("import-cards-box").showModal();
+})
+
+$("#import-cards-textarea").on("keyup", function (event) {
+	let lines = $("#import-cards-textarea").val().split("\n");
+	let lineCount = 0;
+	for (let i = 0; i < lines.length; i++) {
+		let line = lines[i];
+		if (line.trim() === "") {
+			continue;
+		}
+		lineCount++;
+	}
+
+	if (lineCount > 75) {
+		$("#import-cards-yes").attr("disabled", true);
+		$("#import-cards-label").addClass("text-red-500");
+		return;
+	} else {
+		$("#import-cards-label").removeClass("text-red-500");
+	}
+
+	if (lineCount > 0) {
+		$("#import-cards-yes").removeAttr("disabled");
+	} else {
+		$("#import-cards-yes").attr("disabled", true);
+	}
+})
+
+$("#import-cards-yes").on("click", function (event) {
+	function toggleImportButton(enabled) {
+		if (enabled) {
+			$("#import-cards-yes").removeAttr("disabled");
+		} else {
+			$("#import-cards-yes").attr("disabled", true);
+		}
+	}
+
+	let lines = $("#import-cards-textarea").val().split("\n");
+	let importCards = [];
+	toggleImportButton(false);
+	for (let i = 0; i < lines.length; i++) {
+		let line = lines[i];
+		if (line.trim() === "") {
+			continue;
+		}
+		line = line.trim();
+
+		let parts = line.split(" ")
+		if (parts.length === 1) {
+			// just card
+			importCards.push({
+				name: parts[0],
+				quantity: 1
+			})
+		} else {
+			let amount = parts[0].replaceAll("x", "")
+			let number = parseInt(amount);
+
+			if (isNaN(number)) {
+				showError(`Invalid card amount "${amount}" for card "${parts[1]}"`);
+				toggleImportButton(true);
+				return;
+			}
+			parts.shift();
+			let line = parts.join(" ");
+			importCards.push({
+				name: line,
+				quantity: number
+			})
+		}
+	}
+
+	if (importCards.length === 0 || importCards.length > 75) {
+		toggleImportButton(true);
+		return;
+	}
+
+	let reqBody = {
+		identifiers:
+			importCards.map(card => {
+			return {
+				name: card.name
+			}
+		})
+	}
+
+	fetch(`https://api.scryfall.com/cards/collection`, {
+		headers: {
+			"Content-Type": "application/json"
+		},
+		method: "POST",
+		body: JSON.stringify(reqBody)
+	}).then((result) => {
+		result.json().then((json) => {
+			if (json.status && json.status !== 200) {
+				showError(`Error: ${json.status} ${json.details}`);
+				toggleImportButton(true);
+			} else {
+				if (json["not_found"].length > 0) {
+					showError(`Cards not found: ${json["not_found"].join(", ")}`);
+					toggleImportButton(true);
+					return;
+				}
+
+				cards = []
+				
+				for (let i = 0; i < json.data.length; i++) {
+					let thisCard = scryfallResultToCardObject(json.data[i])
+					thisCard.quantity = importCards[i].quantity;
+					cards.push(scryfallResultToCardObject(json.data[i]));
+				}
+			}
+			updateCardList();
+			saveCards();
+			document.getElementById("import-cards-box").close();
+		})
+	}).catch((e) => {
+		showError(`Error: ${e}`);
+		toggleImportButton(true);
+	})
+})
+
+$("#import-cards-cancel").on("click", function (event) {
+	document.getElementById("import-cards-box").close();
 })

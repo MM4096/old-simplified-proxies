@@ -136,7 +136,8 @@
 					</div>
 
 					<div class="flex flex-row gap-2 w-full">
-						<button id="cancel-button" class="btn btn-secondary grow">Cancel</button>
+						<button id="clear-card" class="btn btn-secondary grow">Clear</button>
+						<button id="cancel-button" class="btn btn-accent grow">Cancel</button>
 						<button id="add-card" class="btn btn-primary grow">Add Card</button>
 					</div>
 				</div>
@@ -218,6 +219,7 @@
 	<div class="flex flex-row gap-2">
 		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
 		<button class="btn btn-accent" id="print-proxies">Print Proxies</button>
+		<button class="btn btn-accent" id="import-cards">Import Cards</button>
 		<a class="btn btn-primary" href="index.html">Back Home</a>
 
 		<div class="grow"></div>
@@ -241,6 +243,65 @@
 	</form>
 </dialog>
 
+<dialog id="import-cards-box" class="modal">
+	<div class="modal-box min-w-1/3 w-max">
+		<h2>Import Cards</h2>
+		<br>
+		<p>Paste a list of cards below. Card names must be exact (except symbols and capitalization) and must match one of the following formats:</p>
+		<div class="flex flex-row w-full">
+			<div class="border p-2 w-max">
+				<p>Plains</p>
+				<p>Deflecting Swat</p>
+				<p>Deflecting Swat</p>
+				<p>sakura tribe elder</p>
+				<p>chandra flames fury</p>
+			</div>
+			<div class="border p-2 w-max">
+				<p>2 Plains</p>
+				<p>2 Deflecting Swat</p>
+				<p>4 sakura tribe elder</p>
+				<p>10 chandra flames fury</p>
+			</div>
+			<div class="border p-2 w-max">
+				<p>2x Plains</p>
+				<p>2x Deflecting Swat</p>
+				<p>4x sakura tribe elder</p>
+				<p>10x chandra flames fury</p>
+			</div>
+		</div>
+		<br>
+		<fieldset class="fieldset">
+			<textarea id="import-cards-textarea" class="input input-bordered grow text-wrap min-h-20 w-full" placeholder="Cards go here..."></textarea>
+			<p class="label" id="import-cards-label">Max. 75 unique card names</p>
+		</fieldset>
+
+		<br><br>
+		<div class="flex flex-row items-center justify-center gap-4 w-full">
+			<button class="btn btn-secondary grow" id="import-cards-cancel">Cancel</button>
+			<button class="btn btn-primary grow" id="import-cards-yes" disabled>Import</button>
+		</div>
+		<br>
+
+		<p><small>
+			<i>This will overwrite all of your current cards!</i>
+		</small></p>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Cancel</button>
+	</form>
+</dialog>
+
+<dialog id="error-box" class="modal">
+	<div class="modal-box">
+		<h2>Error</h2>
+		<br>
+		<p id="error-message"></p>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Close</button>
+	</form>
+</dialog>
+
 <dialog id="credits-box" class="modal">
 	<div class="modal-box">
 		<h2>Credits</h2>
@@ -253,6 +314,8 @@
 															  class="link">Slightly Magic</a> (converted to Black and
 		White by me) <small><a href="https://www.slightlymagic.net/forum/viewtopic.php?t=4430" target="_blank"
 							   class="link">(Original thread)</a></small>
+		<br>
+		<small>(Scryfall doesn't endorse nor is associated with this application in any way)</small>
 	</div>
 	<form method="dialog" class="modal-backdrop">
 		<button>Cancel</button>
