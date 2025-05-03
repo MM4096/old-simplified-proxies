@@ -78,6 +78,12 @@ $(document).ready(function () {
 	updateCardList();
 })
 
+function convertOracleTextToHTML(oracleText, useBlackWhiteIcons = false, useSmallIcons = false) {
+	let iconText = convertStringToIconObject(oracleText, useBlackWhiteIcons, useSmallIcons);
+	iconText = iconText.replace(/\n/g, "<br><span class=\"line-break\"></span>");
+	return iconText;
+}
+
 function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	let powerToughnessText = "";
 	if (card.power) {
@@ -109,7 +115,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 <div class="card-divider p-0 m-0"></div>
 <p class="reverse-card-type-line">${card.reverseType || ""}</p>
 <div class="card-divider p-0 m-0"></div>
-<div class="reverse-card-oracle-text card-oracle-text">${convertStringToIconObject(card.reverseText || "", useBlackWhiteIcons, true)}</div>
+<div class="reverse-card-oracle-text card-oracle-text">${convertOracleTextToHTML(card.reverseText || "", useBlackWhiteIcons, true)}</div>
 <div class="grow"></div>
 <div class="card-bottom-container">
 <p class="grow"></p>
@@ -128,8 +134,8 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	
 	<p class="card-type-line">${card.type || ""}</p>
 	<div class="card-divider p-0 m-0"></div>
-	<div class="card-oracle-text">${convertStringToIconObject(card.text || "", useBlackWhiteIcons, true)}</div>
-	<div style="margin-bottom: 0.1in;"></div>
+	<div class="card-oracle-text">${convertOracleTextToHTML(card.text || "", useBlackWhiteIcons, true)}</div>
+	<div style="margin-bottom: 0.2in;"></div>
 	<p><i class="card-flavor-text">${card.flavorText || ""}</i></p>
 	<div class="grow"></div>
 	<div class="card-bottom-container">
@@ -290,7 +296,7 @@ function updateCardList() {
 }
 
 function printProxies() {
-	let printCardsHtml = ""
+	let printCardsHtml = "";
 	// Don't know why this doesn't work normally, so I inverted it
 	let useBlackWhiteIcons = !$("#use-black-white-icons").is(":checked");
 
@@ -304,15 +310,24 @@ function printProxies() {
 	let printWin = window.open("", "_blank");
 	printWin.document.write(`
 <!DOCTYPE html><html lang="en"><head><title>Print Proxies</title><link rel="stylesheet" href="style.css"/><link rel="stylesheet" href="print.css"/></head>
-<body>${printCardsHtml}
+<body class="">
+<div class="no-print">
+<button onclick="window.print();">Print</button>
+<button onclick="window.close();">Close</button>
+<br>
+<p style="margin: 0;"><small><i>Want to export as a PDF? Select "Print" then "Save as PDF" as the location!</i></small></p>
+</div>
+<div class="card-print">
+${printCardsHtml}
+</div>
 </body></html>
 `);
 	printWin.document.close();
 
 	printWin.onload = function () {
 		printWin.focus();
-		printWin.print();
-		printWin.close();
+		// printWin.print();
+		// printWin.close();
 	}
 }
 
@@ -412,7 +427,7 @@ $("#confirm-delete-save-yes").on("click", function (event) {
 	document.getElementById("confirm-delete-save").close()
 })
 
-$("#print-proxies").on("click", function (event) {
+$(".print-proxies").on("click", function (event) {
 	printProxies();
 })
 
@@ -563,6 +578,7 @@ $("#import-cards-yes").on("click", function (event) {
 	}
 
 	let chunks = [];
+	let originalNames = []
 	for (let i = 0; i < importCards.length; i += 75) {
 		let theseCards = importCards.slice(i, i + 75);
 		chunks.push({
@@ -573,14 +589,8 @@ $("#import-cards-yes").on("click", function (event) {
 					}
 				})
 		})
+		originalNames.push(theseCards)
 	}
-	// console.log(chunks);
-	//
-	// if (importCards.length === 0 || importCards.length > 75) {
-	// 	toggleImportButton(true);
-	// 	showError(`Maximum limit (75) exceeded! (found: ${importCards.length})`);
-	// 	return;
-	// }
 
 	let completedRequests = 0;
 	let earlyExit = false;
@@ -617,9 +627,12 @@ $("#import-cards-yes").on("click", function (event) {
 					}
 					completedRequests++;
 					importLabel.text(`Chunk ${i + 1} of ${chunks.length} completed. (${completedRequests}/${chunks.length} total)`)
+
+					let thisChunkOriginalNames = originalNames[i];
 					for (let i = 0; i < json.data.length; i++) {
 						let thisCard = json.data[i];
 						let thisCardObject = scryfallResultToCardObject(thisCard);
+						thisCardObject.quantity = thisChunkOriginalNames[i].quantity;
 						tempCards.push(thisCardObject);
 					}
 
@@ -639,43 +652,23 @@ $("#import-cards-yes").on("click", function (event) {
 			earlyExit = true;
 		})
 	}
-
-	// fetch(`https://api.scryfall.com/cards/collection`, {
-	// 	headers: {
-	// 		"Content-Type": "application/json"
-	// 	},
-	// 	method: "POST",
-	// 	body: JSON.stringify(reqBody)
-	// }).then((result) => {
-	// 	result.json().then((json) => {
-	// 		if (json.status && json.status !== 200) {
-	// 			showError(`Error: ${json.status} ${json.details}`);
-	// 			toggleImportButton(true);
-	// 		} else {
-	// 			if (json["not_found"].length > 0) {
-	// 				showError(`Cards not found: ${json["not_found"].join(", ")}`);
-	// 				toggleImportButton(true);
-	// 				return;
-	// 			}
-	//
-	// 			cards = []
-	//
-	// 			for (let i = 0; i < json.data.length; i++) {
-	// 				let thisCard = scryfallResultToCardObject(json.data[i])
-	// 				thisCard.quantity = importCards[i].quantity;
-	// 				cards.push(scryfallResultToCardObject(json.data[i]));
-	// 			}
-	// 		}
-	// 		updateCardList();
-	// 		saveCards();
-	// 		document.getElementById("import-cards-box").close();
-	// 	})
-	// }).catch((e) => {
-	// 	showError(`Error: ${e}`);
-	// 	toggleImportButton(true);
-	// })
 })
 
 $("#import-cards-cancel").on("click", function (event) {
 	document.getElementById("import-cards-box").close();
+})
+
+$("#preview-all-proxies").on("click", function (event) {
+	let container = $("#preview-all-cards-container");
+	let useBlackWhiteIcons = !$("#use-black-white-icons").is(":checked");
+	container.empty();
+	for (let i = 0; i < cards.length; i++) {
+		let thisCard = cards[i];
+		for (let j = 0; j < thisCard.quantity; j++) {
+			let thisHTML = createCardHTML(thisCard, useBlackWhiteIcons, `card-proxy-${thisCard.name}-${j}`);
+			container.append(thisHTML);
+		}
+	}
+
+	document.getElementById("preview-all-cards-box").showModal();
 })

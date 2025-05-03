@@ -49,7 +49,7 @@ h2 {
 	display: flex;
 	flex-direction: column;
 
-	font-family: sans-serif;
+	font-family: serif;
 	line-height: 1.5;
 }
 
@@ -82,6 +82,13 @@ h2 {
 	white-space: pre-wrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
+}
+
+.card-oracle-text .line-break {
+	display: block;
+	margin: 0;
+	padding: 0;
+	height: 0.03in;
 }
 
 .card-reverse {
@@ -119,21 +126,37 @@ h2 {
 }
 
 .mana-symbol {
-	width: 0.125in;
-	height: 0.125in;
+	width: 1em;
+	height: 1em;
+	vertical-align: sub;
 	/*margin-top: calc(0.16in * 0.25);*/
 	display: inline-block;
+	margin-left: 0.01in;
+	margin-right: 0.01in;
 	/*align-self: flex-start;*/
 }
 
 .mana-symbol-small {
-	width: 0.1in;
-	height: 0.1in;
-	/*margin-top: calc(0.15in * 0.25);*/
+	height: 1em;
+	width: 1em;
+	vertical-align: sub;
+	/*margin: 0;*/
+	/*margin-bottom: calc(0.10in * 0.25);*/
+	margin-left: 0.01in;
+	margin-right: 0.01in;
 	display: inline-block;
 	/*align-self: flex-start;*/
 }
 
 .card-reverse {
 	transform: rotate(180deg);
+}
+
+.card-print {
+	width: 100%;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 2.5in);
+	grid-gap: 0.1in;
+	padding: 0.1in;
 }

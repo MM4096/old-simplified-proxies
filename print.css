@@ -1,19 +1,33 @@
-@page {
-	size: A4;
-	margin: 0;
+@media print {
+	.no-print, .no-print * {
+		display: none !important;
+	}
 }
 
-body {
-	width: 100%;
-	margin: 0;
-	display: grid;
-	grid-template-columns: repeat(auto-fill, 2.5in);
-	grid-gap: 0.1in;
-	justify-content: center;
-	padding: 0.1in;
+@page {
+	size: A4;
+	margin: 0.2in;
 }
 
 body .card-container {
 	box-sizing: border-box;
 	margin: 0.1in;
+}
+
+button {
+	padding: 10px;
+	margin: 2px;
+	border: 1px solid black;
+	border-radius: 5px;
+	background-color: white;
+
+	transition: background-color 0.2s;
+}
+
+button:hover {
+	background-color: lightgray;
+}
+
+button:active {
+	background-color: darkgray;
 }

@@ -218,8 +218,9 @@
 
 	<div class="flex flex-row gap-2">
 		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
-		<button class="btn btn-accent" id="print-proxies">Print Proxies</button>
+		<button class="btn btn-accent print-proxies">Print Proxies</button>
 		<button class="btn btn-accent" id="import-cards">Import Cards</button>
+		<button class="btn btn-accent" id="preview-all-proxies">Preview All Proxies</button>
 		<a class="btn btn-primary" href="index.html">Back Home</a>
 
 		<div class="grow"></div>
@@ -319,6 +320,19 @@
 	</div>
 	<form method="dialog" class="modal-backdrop">
 		<button>Cancel</button>
+	</form>
+</dialog>
+
+<dialog id="preview-all-cards-box" class="modal w-full h-full">
+	<div class="modal-box min-w-9/10 max-h-9/10 min-h-9/10">
+		<h2>All Cards</h2>
+		<div class="divider"></div>
+		<div id="preview-all-cards-container" class="overflow-y-auto w-full card-print h-full"></div>
+
+		<button class="btn btn-primary print-proxies">Print Proxies</button>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Close</button>
 	</form>
 </dialog>
 
