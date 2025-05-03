@@ -271,7 +271,7 @@ function updateCardList() {
 		}
 
 		cardList.append(`
-<div class="p-3 rounded-md border hover:bg-gray-200 flex flex-row items-center" id="card-list-item-${i}">
+<div class="p-3 rounded-md border hover:bg-gray-200 flex flex-row items-center card-list-item" id="card-list-item-${i}">
 <span class="grow">${cardName}</span>
 <div class="divider divider-horizontal p-0 m-0"></div>
 <span class="italic">Qty:</span>
@@ -289,8 +289,9 @@ function updateCardList() {
 			updateCardList();
 		})
 
-		$(`#card-list-item-${i}`).on("click", function (event) {
+		$(`#card-list-item-${i}`).on("click", function () {
 			setUpdatingCard(i);
+			showTab("add-card-container");
 		})
 	}
 }
@@ -309,7 +310,7 @@ function printProxies() {
 
 	let printWin = window.open("", "_blank");
 	printWin.document.write(`
-<!DOCTYPE html><html lang="en"><head><title>Print Proxies</title><link rel="stylesheet" href="style.css"/><link rel="stylesheet" href="print.css"/></head>
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Print Proxies</title><link rel="stylesheet" href="styles/mtg.css"/><link rel="stylesheet" href="styles/print.css"/></head>
 <body class="">
 <div class="no-print">
 <button onclick="window.print();">Print</button>

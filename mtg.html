@@ -12,23 +12,25 @@
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-	<link href="style.css" rel="stylesheet"/>
+	<link href="styles/mtg.css" rel="stylesheet"/>
+	<link href="styles/layout.css" rel="stylesheet"/>
 </head>
 <body data-theme="light" class="min-h-screen bg-base-100 h-min text-2xl md:text-base">
 
-<div class="flex flex-col max-h-screen overflow-y-none p-3 gap-2">
+<div class="flex flex-col h-screen overflow-y-none p-3 gap-2">
 
 	<div class="flex flex-col gap-2 grow max-h-screen overflow-y-auto">
 		<h1>Magic the Gathering - Simplified Proxies</h1>
-		<div class="flex flex-row gap-2 grow min-h-0">
+
+		<div class="flex flex-row gap-2 grow min-h-0" id="main-container">
 
 			<!-- left side -->
-			<div class="flex flex-col gap-2 grow border max-w-1/2">
+			<div class="flex flex-col gap-2 grow border" id="add-card-container">
 
 				<!-- add cards -->
 				<div class="flex flex-col gap-2 p-2 max-h-full overflow-y-auto">
 					<h2>Add Cards</h2>
-					<div class="flex flex-col gap-2 overflow-y-auto">
+					<div class="flex flex-col gap-2 overflow-y-auto" id="add-card-form">
 
 						<label class="label text-xs">
 							<input type="checkbox" class="checkbox checkbox-xs checkbox-primary"
@@ -80,7 +82,7 @@
 									  placeholder="e.g. Sacrifice this creature: Search your library for a basic land card, put that card onto the battlefield tapped, then shuffle."></textarea>
 						</fieldset>
 
-						<fieldset class="fieldset">
+						<fieldset class="fieldset w-full">
 							<legend class="fieldset-legend">Power / Toughness</legend>
 							<div class="flex flex-row gap-2">
 								<input type="text" id="power"
@@ -88,7 +90,7 @@
 								<input type="text" id="toughness"
 									   class="input input-bordered grow"/>
 							</div>
-							<p class="label">These can be omitted for non-creatures like lands.<br>If planeswalker
+							<p class="label text-wrap">These can be omitted for non-creatures like lands.<br>If planeswalker
 								loyalty is desired, setting only Power will work.</p>
 						</fieldset>
 
@@ -148,7 +150,7 @@
 			</div>
 
 			<!-- right side -->
-			<div class="flex row gap-2 grow border max-w-1/2 max-h-full overflow-y-auto">
+			<div class="flex row gap-2 grow border max-h-full overflow-y-auto" id="card-list-container">
 
 				<!-- card list -->
 				<div class="flex flex-col gap-2 p-2 grow max-h-full">
@@ -159,58 +161,56 @@
 						<div class="p-3 rounded-md border hover:bg-gray-200">[Card Name]</div>
 					</div>
 				</div>
+			</div>
 
-				<div class="divider divider-horizontal p-0 m-0"></div>
 
-				<!-- current card preview -->
-				<div class="flex flex-col gap-2 p-2" id="card-preview-container">
-					<h2>Preview</h2>
-					<div class="flex flex-col card-container" id="card-preview">
+			<!-- current card preview -->
+			<div class="flex flex-col gap-2 p-2 border" id="card-preview-container">
+				<h2>Preview</h2>
+				<div class="flex flex-col card-container" id="card-preview">
 
-						<div class="flex flex-row gap-2 w-full card-title-container">
-							<h1 class="font-bold grow card-title">Template Card</h1>
-							<div class="flex flex-row items-center card-mana-cost">
+					<div class="flex flex-row gap-2 w-full card-title-container">
+						<h1 class="font-bold grow card-title">Template Card</h1>
+						<div class="flex flex-row items-center card-mana-cost">
 
-								<img src="images/mtg/icons/standard/b.png" alt="B" class="mana-symbol"/>
-								<img src="images/mtg/icons/standard/w.png" alt="W" class="mana-symbol"/>
-								<img src="images/mtg/icons/standard/up.png" alt="UP" class="mana-symbol"/>
+							<img src="images/mtg/icons/standard/b.png" alt="B" class="mana-symbol"/>
+							<img src="images/mtg/icons/standard/w.png" alt="W" class="mana-symbol"/>
+							<img src="images/mtg/icons/standard/up.png" alt="UP" class="mana-symbol"/>
 
-							</div>
 						</div>
+					</div>
 
-						<div class="divider p-0 m-0"></div>
+					<div class="divider p-0 m-0"></div>
 
-						<p class="card-type-line">Creature - I don&apos;t know</p>
+					<p class="card-type-line">Creature - I don&apos;t know</p>
 
-						<div class="divider p-0 m-0"></div>
+					<div class="divider p-0 m-0"></div>
 
-						<div class="inline-block whitespace-pre-wrap items-start card-oracle-text">
-							<img src="images/mtg/icons/black-white/t.png" alt="Tap" class="mana-symbol"/> : Sacrifice
-						</div>
+					<div class="inline-block whitespace-pre-wrap items-start card-oracle-text">
+						<img src="images/mtg/icons/black-white/t.png" alt="Tap" class="mana-symbol"/> : Sacrifice
+					</div>
 
-						<div class="mb-2"></div>
+					<div class="mb-2"></div>
 
+					<p>
+						<i class="card-flavor-text italic">
+							Description goes here...
+						</i>
+					</p>
+
+
+					<div class="grow"></div>
+
+					<div class="flex flex-row items-end gap-2 card-bottom-container">
 						<p>
-							<i class="card-flavor-text italic">
-								Description goes here...
+							<i class="card-notes italic">
+								This is a note!
 							</i>
 						</p>
 
-
 						<div class="grow"></div>
 
-						<div class="flex flex-row items-end gap-2 card-bottom-container">
-							<p>
-								<i class="card-notes italic">
-									This is a note!
-								</i>
-							</p>
-
-							<div class="grow"></div>
-
-							<p class="card-power-toughness">4 / 4</p>
-
-						</div>
+						<p class="card-power-toughness">4 / 4</p>
 
 					</div>
 
@@ -219,15 +219,23 @@
 		</div>
 	</div>
 
-	<div class="flex flex-row gap-2">
-		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
+	<div class="flex flex-row gap-2 overflow-x-auto overflow-y-auto min-h-max flex-shrink-0" id="options-bar">
 		<button class="btn btn-accent print-proxies">Print Proxies</button>
 		<button class="btn btn-accent" id="import-cards">Import Cards</button>
 		<button class="btn btn-accent" id="preview-all-proxies">Preview All Proxies</button>
+		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
 		<a class="btn btn-primary" href="index.html">Back Home</a>
 
 		<div class="grow"></div>
 		<button class="btn btn-info" id="credits">Credits</button>
+	</div>
+
+	<!-- Tab bar -->
+	<div role="tablist" class="tabs tabs-lift tabs-bottom" id="tab-bar">
+		<button role="tab" id="tab-index-0" class="tab tab-active">Add</button>
+		<button role="tab" id="tab-index-1" class="tab">List</button>
+		<button role="tab" id="tab-index-2" class="tab">Preview</button>
+		<button role="tab" id="tab-index-3" class="tab">Options</button>
 	</div>
 </div>
 
@@ -247,8 +255,8 @@
 	</form>
 </dialog>
 
-<dialog id="import-cards-box" class="modal">
-	<div class="modal-box min-w-1/3 w-max">
+<dialog id="import-cards-box" class="modal max-w-full">
+	<div class="modal-box min-w-1/3 max-w-9/10 overflow-x-auto">
 		<h2>Import Cards</h2>
 		<br>
 		<p>Paste a list of cards below. Card names must be exact (except symbols and capitalization) and must match one of the following formats:</p>
@@ -275,7 +283,7 @@
 		</div>
 		<br>
 		<fieldset class="fieldset">
-			<textarea id="import-cards-textarea" class="input input-bordered grow text-wrap min-h-20 w-full" placeholder="Cards go here..."></textarea>
+			<label for="import-cards-textarea"></label><textarea id="import-cards-textarea" class="input input-bordered grow text-wrap min-h-20 w-full" placeholder="Cards go here..."></textarea>
 			<p class="label" id="import-cards-chunks-label"></p>
 		</fieldset>
 
@@ -342,5 +350,6 @@
 
 <script src="scripts/mtg/mtg_icon_database.js" type="application/javascript"></script>
 <script src="scripts/mtg/mtg.js" type="application/javascript"></script>
+<script src="scripts/layout.js" type="application/javascript"></script>
 </body>
 </html>
