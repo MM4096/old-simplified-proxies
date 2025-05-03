@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Simplified Proxies - Pokemon Trading Card Game</title>
+
+	<link rel="icon" href="images/favicon.svg" type="image/svg+xml"/>
+
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link href="styles/ptcg.css" rel="stylesheet"/>
+	<link href="styles/layout.css" rel="stylesheet"/>
+</head>
+<body data-theme="light" class="min-h-screen bg-base-100 h-min text-2xl md:text-base">
+
+<div class="flex flex-col h-screen overflow-y-none p-3 gap-2">
+	<div class="flex flex-col gap-2 grow max-h-screen overflow-y-auto">
+		<h1>Pokémon Trading Card Game - Simplified Proxies</h1>
+		<div class="flex flex-row gap-2 grow min-h-0" id="main-container">
+
+			<div class="flex flex-col gap-2 grow border" id="add-card-container">
+				<!-- add cards -->
+				<div class="flex flex-col gap-2 p-2 max-h-full overflow-y-auto">
+					<h2>Add Cards</h2>
+					<div class="flex flex-col gap-2 overflow-y-auto pl-2" id="add-card-form">
+						<label class="label text-xs">
+							<input type="checkbox" class="checkbox checkbox-xs checkbox-primary"
+								   id="use-black-white-icons"/>
+							Use black and white icons
+						</label>
+						<div class="label text-xs">
+							<input type="checkbox" class="checkbox checkbox-xs checkbox-secondary"
+								   id="use-scryfall-search"/>
+							Use Pokemon TCG API search
+							<div class="tooltip tooltip-bottom">
+								<div class="tooltip-content" data-tip="">
+									PTCG API Search
+									<br>
+									If enabled, you can press <code>Enter</code> in the card name field to fill in the
+									rest of the information automatically.
+									<br>
+									The card name must <i>exactly</i> match an existing card, and the card with the
+									newest printing is used.
+								</div>
+								<i class="bi-info-circle-fill ml-1"></i>
+							</div>
+						</div>
+
+						<div class="divider m-0 p-0"></div>
+
+						<div class="flex flex-row gap-2">
+							<select class="select" id="card-type">
+								<option disabled selected>-- Card Type --</option>
+								<option>Trainer</option>
+								<option>Pokemon</option>
+							</select>
+							<select class="select" id="trainer-subtype">
+								<option disabled selected>-- Trainer Subtype --</option>
+								<option>Supporter</option>
+								<option>Item</option>
+								<option>Stadium</option>
+							</select>
+						</div>
+
+						<fieldset class="fieldset">
+							<legend class="fieldset-legend">Card Name</legend>
+							<input type="text" id="card-name" placeholder="e.g. Potion"
+								   class="input input-bordered grow"/>
+							<p id="scryfall-result-error" class="text-error"></p>
+						</fieldset>
+
+						<fieldset class="pokemon-type">
+							<legend class="fieldset-legend">Type</legend>
+							<input type="text" id="type" placeholder="e.g. Potion"
+								   class="input input-bordered grow"/>
+							<p class="label">This can be omitted for no-mana cards, such as lands</p>
+						</fieldset>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+</body>
+</html>
