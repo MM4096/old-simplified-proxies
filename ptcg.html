@@ -45,6 +45,8 @@
 									<br>
 									The card name must <i>exactly</i> match an existing card, and the card with the
 									newest printing is used.
+									<br>
+									Alternatively, you can input a card id prefixed with <code>id:</code> (e.g. <code>id:swsh10-46</code>) for an exact card.
 								</div>
 								<i class="bi-info-circle-fill ml-1"></i>
 							</div>
@@ -73,12 +75,37 @@
 							<p id="scryfall-result-error" class="text-error"></p>
 						</fieldset>
 
-						<fieldset class="pokemon-type">
-							<legend class="fieldset-legend">Type</legend>
-							<input type="text" id="type" placeholder="e.g. Potion"
+						<div class="flex flex-row gap-2 flex-wrap type-pokemon">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Type</legend>
+								<input type="text" id="pokemon-type" placeholder="e.g. {R}"
+									   class="input input-bordered grow"/>
+							</fieldset>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">HP</legend>
+								<input type="text" id="pokemon-hp" placeholder="e.g. 210"
+									   class="input input-bordered grow"/>
+							</fieldset>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Evolution Level</legend>
+								<input type="text" id="pokemon-level" placeholder="e.g. Stage 1"
+									   class="input input-bordered grow"/>
+							</fieldset>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Evolves From</legend>
+								<input type="text" id="pokemon-evolves-from" placeholder="e.g. Charmander"
+									   class="input input-bordered grow"/>
+							</fieldset>
+						</div>
+
+
+						<fieldset class="fieldset">
+							<legend class="fieldset-legend">Additional Rules</legend>
+							<input type="text" id="pokemon-rules" placeholder="e.g. Radiant Pokémon Rule: You can't have more than 1 Radiant Pokémon in your deck"
 								   class="input input-bordered grow"/>
-							<p class="label">This can be omitted for no-mana cards, such as lands</p>
+							<p class="label">Use for ex, ace spec, radiant rules, etc.</p>
 						</fieldset>
+
 
 					</div>
 				</div>
