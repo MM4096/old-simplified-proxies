@@ -515,32 +515,6 @@ $("#import-cards").on("click", function (event) {
 	document.getElementById("import-cards-box").showModal();
 })
 
-$("#import-cards-textarea").on("keyup", function (event) {
-	let lines = $("#import-cards-textarea").val().split("\n");
-	let lineCount = 0;
-	for (let i = 0; i < lines.length; i++) {
-		let line = lines[i];
-		if (line.trim() === "") {
-			continue;
-		}
-		lineCount++;
-	}
-
-	if (lineCount > 75) {
-		$("#import-cards-yes").attr("disabled", true);
-		$("#import-cards-label").addClass("text-red-500");
-		return;
-	} else {
-		$("#import-cards-label").removeClass("text-red-500");
-	}
-
-	if (lineCount > 0) {
-		$("#import-cards-yes").removeAttr("disabled");
-	} else {
-		$("#import-cards-yes").attr("disabled", true);
-	}
-})
-
 $("#import-cards-yes").on("click", function (event) {
 	function toggleImportButton(enabled) {
 		if (enabled) {
@@ -551,7 +525,10 @@ $("#import-cards-yes").on("click", function (event) {
 	}
 
 	let lines = $("#import-cards-textarea").val().split("\n");
+	let importLabel = $("#import-cards-chunks-label");
 	let importCards = [];
+
+	importLabel.text("");
 	toggleImportButton(false);
 	for (let i = 0; i < lines.length; i++) {
 		let line = lines[i];
@@ -585,54 +562,118 @@ $("#import-cards-yes").on("click", function (event) {
 		}
 	}
 
-	if (importCards.length === 0 || importCards.length > 75) {
-		toggleImportButton(true);
-		return;
-	}
-
-	let reqBody = {
-		identifiers:
-			importCards.map(card => {
-			return {
-				name: card.name
-			}
+	let chunks = [];
+	for (let i = 0; i < importCards.length; i += 75) {
+		let theseCards = importCards.slice(i, i + 75);
+		chunks.push({
+			identifiers:
+				theseCards.map(card => {
+					return {
+						name: card.name
+					}
+				})
 		})
 	}
+	// console.log(chunks);
+	//
+	// if (importCards.length === 0 || importCards.length > 75) {
+	// 	toggleImportButton(true);
+	// 	showError(`Maximum limit (75) exceeded! (found: ${importCards.length})`);
+	// 	return;
+	// }
 
-	fetch(`https://api.scryfall.com/cards/collection`, {
-		headers: {
-			"Content-Type": "application/json"
-		},
-		method: "POST",
-		body: JSON.stringify(reqBody)
-	}).then((result) => {
-		result.json().then((json) => {
-			if (json.status && json.status !== 200) {
-				showError(`Error: ${json.status} ${json.details}`);
-				toggleImportButton(true);
-			} else {
-				if (json["not_found"].length > 0) {
-					showError(`Cards not found: ${json["not_found"].join(", ")}`);
-					toggleImportButton(true);
+	let completedRequests = 0;
+	let earlyExit = false;
+	let tempCards = [];
+
+	importLabel.text(`Importing ${chunks.length} chunks...`);
+
+	for (let i = 0; i < chunks.length; i++) {
+		let thisChunk = chunks[i];
+		fetch(`https://api.scryfall.com/cards/collection`, {
+			headers: {
+				"Content-Type": "application/json"
+			},
+			method: "POST",
+			body: JSON.stringify(thisChunk)
+		}).then((result) => {
+			result.json().then((json) => {
+				if (earlyExit) {
 					return;
 				}
 
-				cards = []
-				
-				for (let i = 0; i < json.data.length; i++) {
-					let thisCard = scryfallResultToCardObject(json.data[i])
-					thisCard.quantity = importCards[i].quantity;
-					cards.push(scryfallResultToCardObject(json.data[i]));
+				if (json.status && json.status !== 200) {
+					importLabel.text(`Chunk ${i + 1} of ${chunks.length} failed!`)
+					showError(`Error: ${json.status} ${json.details}`);
+					toggleImportButton(true);
+					earlyExit = true;
+				} else {
+					if (json["not_found"].length > 0) {
+						importLabel.text(`Chunk ${i + 1} of ${chunks.length} failed!`)
+						showError(`Cards not found: ${json["not_found"].join(", ")}`);
+						toggleImportButton(true);
+						earlyExit = true;
+						return;
+					}
+					completedRequests++;
+					importLabel.text(`Chunk ${i + 1} of ${chunks.length} completed. (${completedRequests}/${chunks.length} total)`)
+					for (let i = 0; i < json.data.length; i++) {
+						let thisCard = json.data[i];
+						let thisCardObject = scryfallResultToCardObject(thisCard);
+						tempCards.push(thisCardObject);
+					}
+
+					if (completedRequests === chunks.length) {
+						cards = tempCards;
+						updateCardList();
+						saveCards();
+						toggleImportButton(true);
+						document.getElementById("import-cards-box").close();
+						$("#import-cards-textarea").val("");
+					}
 				}
-			}
-			updateCardList();
-			saveCards();
-			document.getElementById("import-cards-box").close();
+			})
+		}).catch((e) => {
+			showError(`Error: ${e}`);
+			toggleImportButton(true);
+			earlyExit = true;
 		})
-	}).catch((e) => {
-		showError(`Error: ${e}`);
-		toggleImportButton(true);
-	})
+	}
+
+	// fetch(`https://api.scryfall.com/cards/collection`, {
+	// 	headers: {
+	// 		"Content-Type": "application/json"
+	// 	},
+	// 	method: "POST",
+	// 	body: JSON.stringify(reqBody)
+	// }).then((result) => {
+	// 	result.json().then((json) => {
+	// 		if (json.status && json.status !== 200) {
+	// 			showError(`Error: ${json.status} ${json.details}`);
+	// 			toggleImportButton(true);
+	// 		} else {
+	// 			if (json["not_found"].length > 0) {
+	// 				showError(`Cards not found: ${json["not_found"].join(", ")}`);
+	// 				toggleImportButton(true);
+	// 				return;
+	// 			}
+	//
+	// 			cards = []
+	//
+	// 			for (let i = 0; i < json.data.length; i++) {
+	// 				let thisCard = scryfallResultToCardObject(json.data[i])
+	// 				thisCard.quantity = importCards[i].quantity;
+	// 				cards.push(scryfallResultToCardObject(json.data[i]));
+	// 			}
+	// 		}
+	// 		updateCardList();
+	// 		saveCards();
+	// 		document.getElementById("import-cards-box").close();
+	// 	})
+	// }).catch((e) => {
+	// 	showError(`Error: ${e}`);
+	// 	toggleImportButton(true);
+	// })
 })
 
 $("#import-cards-cancel").on("click", function (event) {
