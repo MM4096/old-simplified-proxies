@@ -324,7 +324,7 @@ function getCardHTML(card) {
 		`
 
 		cardContentHTML = `
-		<div class="card-content"><p>${card.text}</p></div>
+		<div class="card-content">${convertStringToIconObject(card.text, !useBlackWhiteIcons)}</div>
 		`
 	} else if (card.cardType === CardType.ENERGY) {
 		cardTypeHTML = `<div class="grow"></div>
@@ -334,7 +334,7 @@ function getCardHTML(card) {
 		`
 
 		cardContentHTML = `
-		<div class="card-content"><p>${card.text}</p></div>
+		<div class="card-content">${convertStringToIconObject(card.text, !useBlackWhiteIcons)}</div>
 		`
 	}
 
@@ -487,6 +487,7 @@ function setEditingIndex(index) {
 		$("#add-card").hide();
 	}
 
+	editingIndex = index;
 	updateAttacksAndAbilitiesInputs();
 	updateCardList();
 	updateCardPreview();
@@ -545,12 +546,10 @@ $("#update-card").on("click", function () {
 		return
 	}
 	cards[editingIndex] = getInputCard();
-	clearAllInputs();
 	saveCards();
 })
 
 $("#stop-editing-card").on("click", function () {
-	console.log("cancel");
 	setEditingIndex(-1);
 	clearAllInputs();
 })
