@@ -149,11 +149,11 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 
 function saveCards() {
 	let json = JSON.stringify(cards.map(card => card.toJson()));
-	localStorage.setItem("cards", json);
+	localStorage.setItem("mtg-cards", json);
 }
 
 function loadCards() {
-	let json = localStorage.getItem("cards");
+	let json = localStorage.getItem("mtg-cards");
 	if (json) {
 		json = JSON.parse(json)
 		for (let i = 0; i < json.length; i++) {

@@ -18,15 +18,15 @@
 <body data-theme="light" class="min-h-screen bg-base-100 h-min text-2xl md:text-base">
 
 <div class="flex flex-col h-screen overflow-y-none p-3 gap-2">
-	<div class="flex flex-col gap-2 grow max-h-screen overflow-y-auto">
+	<div class="flex flex-col gap-2 grow max-h-screen overflow-y-auto h-full">
 		<h1>Pokémon Trading Card Game - Simplified Proxies</h1>
-		<div class="flex flex-row gap-2 grow min-h-0" id="main-container">
+		<div class="flex flex-row gap-2 grow min-h-0 h-full" id="main-container">
 
-			<div class="flex flex-col gap-2 grow border" id="add-card-container">
+			<div class="flex flex-col gap-2 grow border h-full" id="add-card-container">
 				<!-- add cards -->
-				<div class="flex flex-col gap-2 p-2 max-h-full overflow-y-auto">
+				<div class="flex flex-col gap-2 p-2 h-full overflow-y-auto">
 					<h2>Add Cards</h2>
-					<div class="flex flex-col gap-2 overflow-y-auto pl-2" id="add-card-form">
+					<div class="flex flex-col gap-2 overflow-y-auto pl-2 h-full" id="add-card-form">
 						<label class="label text-xs">
 							<input type="checkbox" class="checkbox checkbox-xs checkbox-primary"
 								   id="use-black-white-icons"/>
@@ -46,7 +46,8 @@
 									The card name must <i>exactly</i> match an existing card, and the card with the
 									newest printing is used.
 									<br>
-									Alternatively, you can input a card id prefixed with <code>id:</code> (e.g. <code>id:swsh10-46</code>) for an exact card.
+									Alternatively, you can input a card id prefixed with <code>id:</code> (e.g. <code>id:swsh10-46</code>)
+									for an exact card.
 								</div>
 								<i class="bi-info-circle-fill ml-1"></i>
 							</div>
@@ -56,22 +57,28 @@
 
 						<div class="flex flex-row gap-2">
 							<select class="select" id="card-type">
-								<option disabled selected>-- Card Type --</option>
-								<option>Trainer</option>
-								<option>Pokemon</option>
+								<option value="" disabled selected>-- Card Type --</option>
+								<option value="trainer">Trainer</option>
+								<option value="pokemon">Pokemon</option>
+								<option value="energy">Energy</option>
 							</select>
-							<select class="select" id="trainer-subtype">
-								<option disabled selected>-- Trainer Subtype --</option>
-								<option>Supporter</option>
-								<option>Item</option>
-								<option>Stadium</option>
+							<select class="select type-trainer" id="trainer-subtype">
+								<option value="" disabled selected>-- Trainer Subtype --</option>
+								<option value="Supporter">Supporter</option>
+								<option value="Item">Item</option>
+								<option value="Stadium">Stadium</option>
+							</select>
+							<select class="select type-energy" id="energy-subtype">
+								<option value="" disabled selected>-- Energy Subtype --</option>
+								<option value="Basic">Basic</option>
+								<option value="Special">Special</option>
 							</select>
 						</div>
 
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Card Name</legend>
 							<input type="text" id="card-name" placeholder="e.g. Potion"
-								   class="input input-bordered grow"/>
+								   class="input grow"/>
 							<p id="scryfall-result-error" class="text-error"></p>
 						</fieldset>
 
@@ -79,41 +86,153 @@
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Type</legend>
 								<input type="text" id="pokemon-type" placeholder="e.g. {R}"
-									   class="input input-bordered grow"/>
+									   class="input grow"/>
 							</fieldset>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">HP</legend>
 								<input type="text" id="pokemon-hp" placeholder="e.g. 210"
-									   class="input input-bordered grow"/>
+									   class="input grow"/>
 							</fieldset>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Evolution Level</legend>
 								<input type="text" id="pokemon-level" placeholder="e.g. Stage 1"
-									   class="input input-bordered grow"/>
+									   class="input grow"/>
 							</fieldset>
 							<fieldset class="fieldset">
 								<legend class="fieldset-legend">Evolves From</legend>
 								<input type="text" id="pokemon-evolves-from" placeholder="e.g. Charmander"
-									   class="input input-bordered grow"/>
+									   class="input grow"/>
+							</fieldset>
+
+							<div class="flex flex-row gap-2">
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Weakness</legend>
+									<input type="text" id="pokemon-weakness" placeholder="e.g. {R} x2"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Resistance</legend>
+									<input type="text" id="pokemon-resistance" placeholder="e.g. {W} -30"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Retreat Cost</legend>
+									<input type="number" id="pokemon-retreat-cost" placeholder="e.g. 3"
+										   class="input grow"/>
+								</fieldset>
+							</div>
+
+						</div>
+
+						<div class="collapse bg-base-100 border border type-pokemon h-max shrink-0">
+							<input type="checkbox"/>
+							<div class="collapse-title">Attacks and Abilities</div>
+							<div class="collapse-content">
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack Cost/Ability Type</legend>
+									<input type="text" id="ability-attack-type"
+										   placeholder="e.g. &quot;{R}{R}&quot; or &quot;Poke-Body&quot;"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack/Ability Name</legend>
+									<input type="text" id="ability-attack-name"
+										   placeholder="e.g. &quot;Itchy Pollen&quot; or &quot;Flip the Script&quot;"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack Damage</legend>
+									<input type="text" id="ability-attack-damage" placeholder="e.g. 100+"
+										   class="input grow"/>
+									<p class="label">Can be ignored for abilities</p>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack/Ability Text</legend>
+									<textarea id="ability-attack-text"
+											  placeholder="e.g. During your opponent's next turn, they can't play Item cards from their hand."
+											  class="textarea min-h-20"></textarea>
+								</fieldset>
+
+								<button class="btn btn-primary" id="add-attack-ability">Add Attack/Ability</button>
+
+								<div class="collapse bg-base-100 border border type-pokemon h-max shrink-0 mt-3">
+									<input type="checkbox"/>
+									<div class="collapse-title">Attacks and Abilities</div>
+									<div class="collapse-content" id="attacks-abilities-container">
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<div class="type-trainer flex flex-row gap-2 flex-wrap">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Trainer Subsubtype</legend>
+								<input type="text" id="trainer-subsubtype" placeholder="e.g. Technical Machine"
+									   class="input grow"/>
+							</fieldset>
+						</div>
+						<div class="type-trainer">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Card Text</legend>
+								<textarea id="trainer-text" placeholder="e.g. Heal 30 damage from 1 of your Pokemon"
+									   class="textarea h-20"></textarea>
+							</fieldset>
+						</div>
+
+						<div class="type-energy">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Card Text</legend>
+								<textarea id="energy-text" placeholder="e.g. Attacks used by the {R} type Pokemon this card is attached to deal 20 more damage to the opponent's Active Pokemon"
+										  class="textarea h-20"></textarea>
 							</fieldset>
 						</div>
 
 
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Additional Rules</legend>
-							<input type="text" id="pokemon-rules" placeholder="e.g. Radiant Pokémon Rule: You can't have more than 1 Radiant Pokémon in your deck"
-								   class="input input-bordered grow"/>
+							<textarea id="pokemon-rules"
+								   placeholder="e.g. Radiant Pokémon Rule: You can't have more than 1 Radiant Pokémon in your deck"
+								   class="textarea min-h-20"></textarea>
 							<p class="label">Use for ex, ace spec, radiant rules, etc.</p>
 						</fieldset>
 
-
+						<div class="grow"></div>
+						<div class="flex flex-row gap-2 w-full">
+							<button class="btn btn-secondary grow" id="clear-card">Clear Card</button>
+							<button class="btn btn-secondary grow" id="stop-editing-card">Cancel Editing</button>
+							<button class="btn btn-primary grow" id="update-card">Update Card</button>
+							<button class="btn btn-primary grow" id="add-card">Add Card</button>
+						</div>
 					</div>
 				</div>
+			</div>
+
+			<div class="flex row gap-2 grow border max-h-full overflow-y-auto" id="card-list-container">
+
+				<!-- card list -->
+				<div class="flex flex-col gap-2 p-2 grow max-h-full">
+					<h2>Cards</h2>
+					<p>Click a card to see its preview</p>
+					<div class="divider p-0 m-0"></div>
+					<div class="flex flex-col overflow-y-auto gap-2 max-h-full overflow-y-auto" id="card-list">
+						<div class="p-3 rounded-md border hover:bg-gray-200">[Card Name]</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-2 p-2 border" id="card-preview-container">
+				<h2>Preview</h2>
+				<div class="flex flex-col" id="card-preview"></div>
 			</div>
 
 		</div>
 	</div>
 </div>
+
+
+<script src="scripts/ptcg/ptcg_icon_database.js"></script>
+<script src="scripts/ptcg/ptcg.js"></script>
 
 </body>
 </html>

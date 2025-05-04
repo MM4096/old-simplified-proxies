@@ -56,6 +56,11 @@
 	h2 {
 		font-size: 1.5em;
 	}
+
+	#add-card-container {
+		max-width: 40%;
+		width: 40%;
+	}
 }
 
 body {
