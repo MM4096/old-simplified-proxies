@@ -45,3 +45,30 @@ $(document).ready(function () {
 	}
 	showTab("add-card-container");
 })
+
+$("#delete-save").on("click", function (event) {
+	document.getElementById("confirm-delete-save").showModal()
+})
+
+$("#confirm-delete-save-cancel").on("click", function (event) {
+	document.getElementById("confirm-delete-save").close()
+})
+
+$("#confirm-delete-save-yes").on("click", function (event) {
+	cards = [];
+	newEditingCard = null;
+	clearInputs();
+	saveCards();
+	setEditingCardIndex(-1);
+	updateCardList();
+
+	document.getElementById("confirm-delete-save").close()
+})
+
+$(".print-proxies").on("click", function (event) {
+	printProxies();
+})
+
+$("#credits").on("click", function (event) {
+	document.getElementById("credits-box").showModal()
+})

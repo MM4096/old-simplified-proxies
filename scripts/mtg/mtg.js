@@ -74,7 +74,7 @@ let editingIndex = -1;
 
 $(document).ready(function () {
 	loadCards();
-	setUpdatingCard(-1)
+	setEditingCardIndex(-1)
 	updateCardList();
 })
 
@@ -227,7 +227,7 @@ function loadCardIntoInput(card) {
 	$("#reverse-toughness").val(card.reverseToughness);
 }
 
-function setUpdatingCard(index) {
+function setEditingCardIndex(index) {
 	if (index < 0) {
 		if (newEditingCard) {
 			loadCardIntoInput(newEditingCard);
@@ -282,7 +282,7 @@ function updateCardList() {
 			let newQty = $(this).val();
 			if (newQty <= 0) {
 				cards.splice(i, 1);
-				setUpdatingCard(-1);
+				setEditingCardIndex(-1);
 			} else {
 				cards[i].quantity = newQty;
 			}
@@ -290,7 +290,7 @@ function updateCardList() {
 		})
 
 		$(`#card-list-item-${i}`).on("click", function () {
-			setUpdatingCard(i);
+			setEditingCardIndex(i);
 			showTab("add-card-container");
 		})
 	}
@@ -396,7 +396,7 @@ $("#add-card").on("click", function (event) {
 	if (editingIndex < 0) {
 		cards.push(getInputCard());
 		newEditingCard = null;
-		setUpdatingCard(-1)
+		setEditingCardIndex(-1)
 	} else {
 		cards[editingIndex] = getInputCard();
 	}
@@ -405,35 +405,8 @@ $("#add-card").on("click", function (event) {
 })
 
 $("#cancel-button").on("click", function (event) {
-	setUpdatingCard(-1);
+	setEditingCardIndex(-1);
 	updatePreviewCard();
-})
-
-$("#delete-save").on("click", function (event) {
-	document.getElementById("confirm-delete-save").showModal()
-})
-
-$("#confirm-delete-save-cancel").on("click", function (event) {
-	document.getElementById("confirm-delete-save").close()
-})
-
-$("#confirm-delete-save-yes").on("click", function (event) {
-	cards = [];
-	newEditingCard = null;
-	clearInputs();
-	saveCards();
-	setUpdatingCard(-1);
-	updateCardList();
-
-	document.getElementById("confirm-delete-save").close()
-})
-
-$(".print-proxies").on("click", function (event) {
-	printProxies();
-})
-
-$("#credits").on("click", function (event) {
-	document.getElementById("credits-box").showModal()
 })
 
 $("#use-scryfall-search").on("click", function (event) {
@@ -507,7 +480,7 @@ $("#card-name").on("keyup", function (event) {
 						}
 					}
 
-					setUpdatingCard(-1);
+					setEditingCardIndex(-1);
 					updatePreviewCard();
 					updateCardList();
 					saveCards();
@@ -523,7 +496,7 @@ $("#card-name").on("keyup", function (event) {
 
 $("#clear-card").on("click", function (event) {
 	clearInputs();
-	setUpdatingCard(-1);
+	setEditingCardIndex(-1);
 	updatePreviewCard();
 })
 

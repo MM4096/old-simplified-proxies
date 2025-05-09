@@ -20,6 +20,23 @@ function getIconObject(code, isColorIcon = true) {
 }
 
 function convertStringToIconObject(string, isColorIcon = true) {
+
+	string = string.replaceAll("Dragon", "{a}");
+	string = string.replaceAll("Colorless", "{c}");
+	string = string.replaceAll("Darkness", "{d}");
+	string = string.replaceAll("Fighting", "{f}");
+	string = string.replaceAll("Grass", "{g}");
+	string = string.replaceAll("Lightning", "{l}");
+	string = string.replaceAll("Metal", "{m}");
+	string = string.replaceAll("Psychic", "{p}");
+	string = string.replaceAll("Fire", "{r}");
+	string = string.replaceAll("Water", "{w}");
+	string = string.replaceAll("Fairy", "{y}");
+	string = string.replaceAll("Free", "{n}");
+
+	string = string.replaceAll("okemon", "okémon")
+
+
 	const matches = string.match(/(?<!\\)\{.*?}/g);
 
 	let codes = string;

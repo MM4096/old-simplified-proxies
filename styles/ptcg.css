@@ -15,6 +15,8 @@
 	display: flex;
 	flex-direction: column;
 
+	font-family: serif;
+
 	line-height: 1.5;
 
 	h1 {
@@ -33,11 +35,15 @@
 	flex-direction: row;
 	gap: 0.05in;
 
+	* {
+		margin: 0;
+	}
+
 	.card-title {
 		gap: 0;
 		.energy-symbol {
-			margin-left: 0.05in;
-			margin-right: 0.05in;
+			/*margin-left: 0.05in;*/
+			/*margin-right: 0.05in;*/
 		}
 	}
 }
@@ -77,16 +83,22 @@
 	flex-direction: row;
 	height: 100%;
 	align-items: center;
+	width: min-content;
+	p {
+		width: max-content;
+	}
 }
 
 .card-content {
 	flex-grow: 1;
 	display: inline-block;
-	white-space: pre-wrap;
+	* {
+		white-space: pre-line;
+	}
 }
 
 .card-attack-or-ability {
-
+	white-space: nowrap;
 	.top-line {
 		display: flex;
 		flex-direction: row;
@@ -111,6 +123,10 @@
 			text-align: right;
 		}
 	}
+
+	p {
+		white-space: pre-line;
+	}
 }
 
 .card-additional-rules {
@@ -126,6 +142,10 @@
 	margin-bottom: 0.05in;
 	font-size: 0.075in;
 
+	* {
+		margin: 0;
+	}
+
 	p {
 		display: inline-flex;
 	}
@@ -136,7 +156,14 @@
 	width: 1em;
 	margin-left: 0.01in;
 	margin-right: 0.01in;
-	/*margin-top: calc(1em * 0.125);*/
+	margin-top: calc(1em * 0.125);
 	display: inline-block;
 	vertical-align: sub;
+}
+
+#preview-all-cards-container {
+	display: flex;
+	flex-direction: row;
+	gap: 0.1in;
+	flex-wrap: wrap;
 }

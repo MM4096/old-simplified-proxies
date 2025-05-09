@@ -34,7 +34,7 @@
 						</label>
 						<div class="label text-xs">
 							<input type="checkbox" class="checkbox checkbox-xs checkbox-secondary"
-								   id="use-scryfall-search"/>
+								   id="use-ptcgapi-search"/>
 							Use Pokemon TCG API search
 							<div class="tooltip tooltip-bottom">
 								<div class="tooltip-content" data-tip="">
@@ -48,6 +48,13 @@
 									<br>
 									Alternatively, you can input a card id prefixed with <code>id:</code> (e.g. <code>id:swsh10-46</code>)
 									for an exact card.
+									<br>
+									ID FORMATS:
+									<br>
+									SV1-1,
+									SV1 1,
+									SVI-1,
+									SVI 1
 								</div>
 								<i class="bi-info-circle-fill ml-1"></i>
 							</div>
@@ -66,6 +73,7 @@
 								<option value="" disabled selected>-- Trainer Subtype --</option>
 								<option value="Supporter">Supporter</option>
 								<option value="Item">Item</option>
+								<option value="Pokemon Tool">Pokemon Tool</option>
 								<option value="Stadium">Stadium</option>
 							</select>
 							<select class="select type-energy" id="energy-subtype">
@@ -124,7 +132,31 @@
 
 						</div>
 
-						<div class="collapse bg-base-100 border border type-pokemon h-max shrink-0">
+<!--						<div class="type-trainer flex flex-row gap-2 flex-wrap">-->
+<!--							<fieldset class="fieldset">-->
+<!--								<legend class="fieldset-legend">Trainer Subsubtype</legend>-->
+<!--								<input type="text" id="trainer-subsubtype" placeholder="e.g. Technical Machine"-->
+<!--									   class="input grow"/>-->
+<!--							</fieldset>-->
+<!--						</div>-->
+						<div class="type-trainer">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Card Text</legend>
+								<textarea id="trainer-text" placeholder="e.g. Heal 30 damage from 1 of your Pokemon"
+									   class="textarea h-20"></textarea>
+							</fieldset>
+						</div>
+
+						<div class="type-energy">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Card Text</legend>
+								<textarea id="energy-text" placeholder="e.g. Attacks used by the {R} type Pokemon this card is attached to deal 20 more damage to the opponent's Active Pokemon"
+										  class="textarea h-20"></textarea>
+							</fieldset>
+						</div>
+
+
+						<div class="collapse bg-base-100 border border h-max shrink-0">
 							<input type="checkbox"/>
 							<div class="collapse-title">Attacks and Abilities</div>
 							<div class="collapse-content">
@@ -155,7 +187,7 @@
 
 								<button class="btn btn-primary" id="add-attack-ability">Add Attack/Ability</button>
 
-								<div class="collapse bg-base-100 border border type-pokemon h-max shrink-0 mt-3">
+								<div class="collapse bg-base-200 border border h-max shrink-0 mt-3">
 									<input type="checkbox"/>
 									<div class="collapse-title">Attacks and Abilities</div>
 									<div class="collapse-content" id="attacks-abilities-container">
@@ -164,30 +196,6 @@
 
 							</div>
 						</div>
-
-						<div class="type-trainer flex flex-row gap-2 flex-wrap">
-							<fieldset class="fieldset">
-								<legend class="fieldset-legend">Trainer Subsubtype</legend>
-								<input type="text" id="trainer-subsubtype" placeholder="e.g. Technical Machine"
-									   class="input grow"/>
-							</fieldset>
-						</div>
-						<div class="type-trainer">
-							<fieldset class="fieldset">
-								<legend class="fieldset-legend">Card Text</legend>
-								<textarea id="trainer-text" placeholder="e.g. Heal 30 damage from 1 of your Pokemon"
-									   class="textarea h-20"></textarea>
-							</fieldset>
-						</div>
-
-						<div class="type-energy">
-							<fieldset class="fieldset">
-								<legend class="fieldset-legend">Card Text</legend>
-								<textarea id="energy-text" placeholder="e.g. Attacks used by the {R} type Pokemon this card is attached to deal 20 more damage to the opponent's Active Pokemon"
-										  class="textarea h-20"></textarea>
-							</fieldset>
-						</div>
-
 
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Additional Rules</legend>
@@ -228,9 +236,76 @@
 
 		</div>
 	</div>
+	<div class="flex flex-row gap-2 overflow-x-auto overflow-y-auto min-h-max flex-shrink-0" id="options-bar">
+		<button class="btn btn-accent print-proxies">Print Proxies</button>
+		<button class="btn btn-accent" id="import-cards">Import Cards</button>
+		<button class="btn btn-accent" id="preview-all-proxies">Preview All Proxies</button>
+		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
+		<a class="btn btn-primary" href="index.html">Back Home</a>
+
+		<div class="grow"></div>
+		<button class="btn btn-info" id="credits">Credits</button>
+	</div>
 </div>
 
+<dialog id="confirm-delete-save" class="modal">
+	<div class="modal-box">
+		<h2>Are you Sure?</h2>
+		<br>
+		<p>This will delete <i>all</i> of your data, including any saved cards and current input values.</p>
+		<br>
+		<div class="flex flex-row items-center justify-center gap-4">
+			<button class="btn btn-primary" id="confirm-delete-save-cancel">Cancel</button>
+			<button class="btn btn-secondary" id="confirm-delete-save-yes">Yes, delete</button>
+		</div>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Cancel</button>
+	</form>
+</dialog>
+<dialog id="preview-all-cards-box" class="modal w-full h-full">
+	<div class="modal-box min-w-9/10 max-h-9/10 min-h-9/10">
+		<h2>All Cards</h2>
+		<div class="divider"></div>
+		<div id="preview-all-cards-container" class="overflow-y-auto w-full card-print h-full"></div>
+		<br>
+		<button class="btn btn-primary print-proxies">Print Proxies</button>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Close</button>
+	</form>
+</dialog>
 
+<dialog id="error-box" class="modal">
+	<div class="modal-box">
+		<h2>Error</h2>
+		<br>
+		<p id="error-message"></p>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Close</button>
+	</form>
+</dialog>
+
+<dialog id="credits-box" class="modal">
+	<div class="modal-box">
+		<h2>Credits</h2>
+		<br>
+		Pokemon TCG Search API: <a href="https://pokemontcg.io/" target="_blank" class="link">PokemonTCGIO</a>
+		<br>
+		Colored Energy Icons (except <i>Plus</i> and <i>Free</i>): <a href="https://www.deviantart.com/biochao/art/Pokemon-Trading-Card-Game-Energy-Symbols-906732898" target="_blank" class="link">Biochao <i>(via DevianArt)</i></a> (adapted by me)
+		<br>
+		Black and White Energy Icons: myself (original source: see: Colored Energy Icons, above)
+		<br>
+		<br>
+		<small>None of the sources above (except for myself) endorse this project in any way.</small>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Cancel</button>
+	</form>
+</dialog>
+
+<script src="scripts/layout.js"></script>
 <script src="scripts/ptcg/ptcg_icon_database.js"></script>
 <script src="scripts/ptcg/ptcg.js"></script>
 
