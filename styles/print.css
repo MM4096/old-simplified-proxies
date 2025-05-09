@@ -31,3 +31,12 @@ button:hover {
 button:active {
 	background-color: darkgray;
 }
+
+.card-print {
+	width: 100%;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, 2.5in);
+	grid-gap: 0.1in;
+	padding: 0.1in;
+}

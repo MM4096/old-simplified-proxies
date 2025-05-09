@@ -8,8 +8,9 @@
 
 	<link rel="icon" href="images/favicon.svg" type="image/svg+xml"/>
 
-	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>
-	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!--	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>-->
+<!--	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>-->
+	<link rel="stylesheet" href="styles/tailwindOut.css"/>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 	<link href="styles/mtg.css" rel="stylesheet"/>
@@ -57,7 +58,7 @@
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Card Name</legend>
 							<input type="text" id="card-name" placeholder="e.g. Sakura Tribe Elder"
-								   class="input input-bordered grow"/>
+								   class="input grow"/>
 							<p id="scryfall-result-error" class="text-error"></p>
 						</fieldset>
 
@@ -65,7 +66,7 @@
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Mana Cost</legend>
 							<input type="text" id="mana-cost" placeholder="e.g. {1}{G}"
-								   class="input input-bordered grow"/>
+								   class="input grow"/>
 							<p class="label">This can be omitted for no-mana cards, such as lands</p>
 						</fieldset>
 
@@ -73,12 +74,12 @@
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Type Line</legend>
 							<input type="text" id="type-line" placeholder="e.g. Creature - Snake Shaman"
-								   class="input input-bordered grow"/>
+								   class="input grow"/>
 						</fieldset>
 
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Oracle Text</legend>
-							<textarea id="oracle-text" class="input input-bordered grow text-wrap min-h-20"
+							<textarea id="oracle-text" class="input grow text-wrap min-h-20"
 									  placeholder="e.g. Sacrifice this creature: Search your library for a basic land card, put that card onto the battlefield tapped, then shuffle."></textarea>
 						</fieldset>
 
@@ -86,9 +87,9 @@
 							<legend class="fieldset-legend">Power / Toughness</legend>
 							<div class="flex flex-row gap-2">
 								<input type="text" id="power"
-									   class="input input-bordered grow"/>
+									   class="input grow"/>
 								<input type="text" id="toughness"
-									   class="input input-bordered grow"/>
+									   class="input grow"/>
 							</div>
 							<p class="label text-wrap">These can be omitted for non-creatures like lands.<br>If planeswalker
 								loyalty is desired, setting only Power will work.</p>
@@ -96,7 +97,7 @@
 
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Flavor Text</legend>
-							<textarea id="flavor-text" class="input input-bordered grow text-wrap min-h-20"
+							<textarea id="flavor-text" class="input grow text-wrap min-h-20"
 									  placeholder="e.g. There were no tombstones in orochi territory. Slain warriors were buried with a tree sapling, so they would become a part of the forest after death."></textarea>
 						</fieldset>
 
@@ -118,16 +119,16 @@
 								</fieldset>
 								<fieldset class="fieldset">
 									<legend class="fieldset-legend">Reverse Oracle Text</legend>
-									<textarea id="reverse-oracle-text" class="input input-bordered grow text-wrap min-h-20"></textarea>
+									<textarea id="reverse-oracle-text" class="input grow text-wrap min-h-20"></textarea>
 								</fieldset>
 
 								<fieldset class="fieldset">
 									<legend class="fieldset-legend">Reverse Power / Toughness</legend>
 									<div class="flex flex-row gap-2">
 										<input type="text" id="reverse-power"
-											   class="input input-bordered grow"/>
+											   class="input grow"/>
 										<input type="text" id="reverse-toughness"
-											   class="input input-bordered grow"/>
+											   class="input grow"/>
 									</div>
 								</fieldset>
 							</div>
@@ -136,7 +137,7 @@
 						<fieldset class="fieldset">
 							<legend class="fieldset-legend">Notes</legend>
 							<input type="text" id="notes" placeholder=""
-								   class="input input-bordered grow"/>
+								   class="input grow"/>
 						</fieldset>
 					</div>
 
@@ -283,7 +284,7 @@
 		</div>
 		<br>
 		<fieldset class="fieldset">
-			<label for="import-cards-textarea"></label><textarea id="import-cards-textarea" class="input input-bordered grow text-wrap min-h-20 w-full" placeholder="Cards go here..."></textarea>
+			<label for="import-cards-textarea"></label><textarea id="import-cards-textarea" class="input grow text-wrap min-h-20 w-full" placeholder="Cards go here..."></textarea>
 			<p class="label" id="import-cards-chunks-label"></p>
 		</fieldset>
 

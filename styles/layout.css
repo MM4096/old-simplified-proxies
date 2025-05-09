@@ -47,6 +47,20 @@
 	#tab-bar {
 		display: none;
 	}
+
+	h1 {
+		font-size: 2em;
+		font-weight: bold;
+	}
+
+	h2 {
+		font-size: 1.5em;
+	}
+
+	#add-card-container {
+		max-width: 40%;
+		width: 40%;
+	}
 }
 
 body {

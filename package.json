@@ -1,0 +1,31 @@
+{
+  "name": "simplified-proxies",
+  "version": "1.0.0",
+  "description": "Make print-friendly proxies for Magic the Gathering cards (because \\[\\[Deflecting Swat]] is too expensive to buy, especially for playtesting)",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i styles/tailwindSource.css -o styles/tailwindOut.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MM4096/simplified-proxies.git"
+  },
+  "keywords": [
+    "Trading Card Game",
+    "Magic the Gathering",
+    "Pokemon Trading Card Game",
+    "proxies",
+    "simplified proxies",
+    "black and white"
+  ],
+  "author": "mm4096",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MM4096/simplified-proxies/issues"
+  },
+  "homepage": "https://github.com/MM4096/simplified-proxies#readme",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.6",
+    "daisyui": "^5.0.35",
+    "tailwindcss": "^4.1.6"
+  }
+}

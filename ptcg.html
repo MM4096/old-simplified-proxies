@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Simplified Proxies - Pokemon Trading Card Game</title>
+
+	<link rel="icon" href="images/favicon.svg" type="image/svg+xml"/>
+
+<!--	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>-->
+<!--	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>-->
+	<link rel="stylesheet" href="styles/tailwindOut.css"/>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link href="styles/ptcg.css" rel="stylesheet"/>
+	<link href="styles/layout.css" rel="stylesheet"/>
+</head>
+<body data-theme="light" class="min-h-screen bg-base-100 h-min text-2xl md:text-base">
+
+<div class="flex flex-col h-screen overflow-y-none p-3 gap-2">
+	<div class="flex flex-col gap-2 grow max-h-screen overflow-y-auto h-full">
+		<h1>Pokémon Trading Card Game - Simplified Proxies</h1>
+		<div class="flex flex-row gap-2 grow min-h-0 h-full" id="main-container">
+
+			<div class="flex flex-col gap-2 grow border h-full" id="add-card-container">
+				<!-- add cards -->
+				<div class="flex flex-col gap-2 p-2 h-full overflow-y-auto">
+					<h2>Add Cards</h2>
+					<div class="flex flex-col gap-2 overflow-y-auto pl-2 h-full" id="add-card-form">
+						<label class="label text-xs">
+							<input type="checkbox" class="checkbox checkbox-xs checkbox-primary"
+								   id="use-black-white-icons"/>
+							Use black and white icons
+						</label>
+						<div class="label text-xs">
+							<input type="checkbox" class="checkbox checkbox-xs checkbox-secondary"
+								   id="use-ptcgapi-search"/>
+							Use Pokemon TCG API search
+							<div class="tooltip tooltip-bottom">
+								<div class="tooltip-content" data-tip="">
+									PTCG API Search
+									<br>
+									If enabled, you can press <code>Enter</code> in the card name field to fill in the
+									rest of the information automatically.
+									<br>
+									The card name must <i>exactly</i> match an existing card, and the card with the
+									newest printing is used.
+									<br>
+									Alternatively, you can input a card id prefixed with <code>id:</code> (e.g. <code>id:swsh10-46</code>)
+									for an exact card.
+									<br>
+									ID FORMATS:
+									<br>
+									SV1-1,
+									SV1 1,
+									SVI-1,
+									SVI 1
+								</div>
+								<i class="bi-info-circle-fill ml-1"></i>
+							</div>
+						</div>
+
+						<div class="divider m-0 p-0"></div>
+
+						<div class="flex flex-row gap-2">
+							<select class="select" id="card-type">
+								<option value="" disabled selected>-- Card Type --</option>
+								<option value="trainer">Trainer</option>
+								<option value="pokemon">Pokemon</option>
+								<option value="energy">Energy</option>
+							</select>
+							<select class="select type-trainer" id="trainer-subtype">
+								<option value="" disabled selected>-- Trainer Subtype --</option>
+								<option value="Supporter">Supporter</option>
+								<option value="Item">Item</option>
+								<option value="Pokemon Tool">Pokemon Tool</option>
+								<option value="Stadium">Stadium</option>
+							</select>
+							<select class="select type-energy" id="energy-subtype">
+								<option value="" disabled selected>-- Energy Subtype --</option>
+								<option value="Basic">Basic</option>
+								<option value="Special">Special</option>
+							</select>
+						</div>
+
+						<fieldset class="fieldset">
+							<legend class="fieldset-legend">Card Name</legend>
+							<input type="text" id="card-name" placeholder="e.g. Potion"
+								   class="input grow"/>
+							<p id="scryfall-result-error" class="text-error"></p>
+						</fieldset>
+
+						<div class="flex flex-row gap-2 flex-wrap type-pokemon">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Type</legend>
+								<input type="text" id="pokemon-type" placeholder="e.g. {R}"
+									   class="input grow"/>
+							</fieldset>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">HP</legend>
+								<input type="text" id="pokemon-hp" placeholder="e.g. 210"
+									   class="input grow"/>
+							</fieldset>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Evolution Level</legend>
+								<input type="text" id="pokemon-level" placeholder="e.g. Stage 1"
+									   class="input grow"/>
+							</fieldset>
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Evolves From</legend>
+								<input type="text" id="pokemon-evolves-from" placeholder="e.g. Charmander"
+									   class="input grow"/>
+							</fieldset>
+
+							<div class="flex flex-row gap-2">
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Weakness</legend>
+									<input type="text" id="pokemon-weakness" placeholder="e.g. {R} x2"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Resistance</legend>
+									<input type="text" id="pokemon-resistance" placeholder="e.g. {W} -30"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Retreat Cost</legend>
+									<input type="number" id="pokemon-retreat-cost" placeholder="e.g. 3"
+										   class="input grow"/>
+								</fieldset>
+							</div>
+
+						</div>
+
+						<!--						<div class="type-trainer flex flex-row gap-2 flex-wrap">-->
+						<!--							<fieldset class="fieldset">-->
+						<!--								<legend class="fieldset-legend">Trainer Subsubtype</legend>-->
+						<!--								<input type="text" id="trainer-subsubtype" placeholder="e.g. Technical Machine"-->
+						<!--									   class="input grow"/>-->
+						<!--							</fieldset>-->
+						<!--						</div>-->
+						<div class="type-trainer">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Card Text</legend>
+								<textarea id="trainer-text" placeholder="e.g. Heal 30 damage from 1 of your Pokemon"
+										  class="textarea h-20"></textarea>
+							</fieldset>
+						</div>
+
+						<div class="type-energy">
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend">Card Text</legend>
+								<textarea id="energy-text"
+										  placeholder="e.g. Attacks used by the {R} type Pokemon this card is attached to deal 20 more damage to the opponent's Active Pokemon"
+										  class="textarea h-20"></textarea>
+							</fieldset>
+						</div>
+
+
+						<div class="collapse bg-base-100 border border h-max shrink-0">
+							<input type="checkbox"/>
+							<div class="collapse-title">Attacks and Abilities</div>
+							<div class="collapse-content">
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack Cost/Ability Type</legend>
+									<input type="text" id="ability-attack-type"
+										   placeholder="e.g. &quot;{R}{R}&quot; or &quot;Poke-Body&quot;"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack/Ability Name</legend>
+									<input type="text" id="ability-attack-name"
+										   placeholder="e.g. &quot;Itchy Pollen&quot; or &quot;Flip the Script&quot;"
+										   class="input grow"/>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack Damage</legend>
+									<input type="text" id="ability-attack-damage" placeholder="e.g. 100+"
+										   class="input grow"/>
+									<p class="label">Can be ignored for abilities</p>
+								</fieldset>
+								<fieldset class="fieldset">
+									<legend class="fieldset-legend">Attack/Ability Text</legend>
+									<textarea id="ability-attack-text"
+											  placeholder="e.g. During your opponent's next turn, they can't play Item cards from their hand."
+											  class="textarea min-h-20"></textarea>
+								</fieldset>
+
+								<button class="btn btn-primary" id="add-attack-ability">Add Attack/Ability</button>
+
+								<div class="collapse bg-base-200 border border h-max shrink-0 mt-3">
+									<input type="checkbox"/>
+									<div class="collapse-title">Attacks and Abilities</div>
+									<div class="collapse-content" id="attacks-abilities-container">
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<fieldset class="fieldset">
+							<legend class="fieldset-legend">Additional Rules</legend>
+							<textarea id="pokemon-rules"
+									  placeholder="e.g. Radiant Pokémon Rule: You can't have more than 1 Radiant Pokémon in your deck"
+									  class="textarea min-h-20"></textarea>
+							<p class="label">Use for ex, ace spec, radiant rules, etc.</p>
+						</fieldset>
+
+						<div class="grow"></div>
+						<div class="flex flex-row gap-2 w-full">
+							<button class="btn btn-secondary grow" id="clear-card">Clear Card</button>
+							<button class="btn btn-secondary grow" id="stop-editing-card">Cancel Editing</button>
+							<button class="btn btn-primary grow" id="update-card">Update Card</button>
+							<button class="btn btn-primary grow" id="add-card">Add Card</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex row gap-2 grow border max-h-full overflow-y-auto" id="card-list-container">
+
+				<!-- card list -->
+				<div class="flex flex-col gap-2 p-2 grow max-h-full">
+					<h2>Cards</h2>
+					<p>Click a card to see its preview</p>
+					<div class="divider p-0 m-0"></div>
+					<div class="flex flex-col overflow-y-auto gap-2 max-h-full overflow-y-auto" id="card-list">
+						<div class="p-3 rounded-md border hover:bg-gray-200">[Card Name]</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-2 p-2 border" id="card-preview-container">
+				<h2>Preview</h2>
+				<div class="flex flex-col" id="card-preview"></div>
+			</div>
+
+		</div>
+	</div>
+	<div class="flex flex-row gap-2 overflow-x-auto overflow-y-auto min-h-max flex-shrink-0" id="options-bar">
+		<button class="btn btn-accent print-proxies">Print Proxies</button>
+		<button class="btn btn-accent" id="import-cards">Import Cards</button>
+		<button class="btn btn-accent" id="preview-all-proxies">Preview All Proxies</button>
+		<button class="btn btn-secondary" id="delete-save">Delete Saved Data</button>
+		<a class="btn btn-primary" href="index.html">Back Home</a>
+
+		<div class="grow"></div>
+		<button class="btn btn-info" id="credits">Credits</button>
+	</div>
+</div>
+
+<dialog id="confirm-delete-save" class="modal">
+	<div class="modal-box">
+		<h2>Are you Sure?</h2>
+		<br>
+		<p>This will delete <i>all</i> of your data, including any saved cards and current input values.</p>
+		<br>
+		<div class="flex flex-row items-center justify-center gap-4">
+			<button class="btn btn-primary" id="confirm-delete-save-cancel">Cancel</button>
+			<button class="btn btn-secondary" id="confirm-delete-save-yes">Yes, delete</button>
+		</div>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Cancel</button>
+	</form>
+</dialog>
+<dialog id="preview-all-cards-box" class="modal w-full h-full">
+	<div class="modal-box min-w-9/10 max-h-9/10 min-h-9/10">
+		<h2>All Cards</h2>
+		<div class="divider"></div>
+		<div id="preview-all-cards-container" class="overflow-y-auto w-full card-print h-full"></div>
+		<br>
+		<button class="btn btn-primary print-proxies">Print Proxies</button>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Close</button>
+	</form>
+</dialog>
+
+<dialog id="error-box" class="modal">
+	<div class="modal-box">
+		<h2>Error</h2>
+		<br>
+		<p id="error-message"></p>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Close</button>
+	</form>
+</dialog>
+
+<dialog id="credits-box" class="modal">
+	<div class="modal-box">
+		<h2>Credits</h2>
+		<br>
+		Pokemon TCG Search API: <a href="https://pokemontcg.io/" target="_blank" class="link">PokemonTCGIO</a>
+		<br>
+		Colored Energy Icons (except <i>Plus</i> and <i>Free</i>): <a
+			href="https://www.deviantart.com/biochao/art/Pokemon-Trading-Card-Game-Energy-Symbols-906732898"
+			target="_blank" class="link">Biochao <i>(via DevianArt)</i></a> (adapted by me)
+		<br>
+		Black and White Energy Icons: myself (original source: see: Colored Energy Icons, above)
+		<br>
+		<br>
+		<small>None of the sources above (except for myself) endorse this project in any way.</small>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Cancel</button>
+	</form>
+</dialog>
+
+<dialog id="import-cards-box" class="modal max-w-full">
+	<div class="modal-box min-w-1/3 max-w-9/10 overflow-x-auto">
+		<h2>Import Cards</h2>
+		<br>
+		<p>Paste a list of cards below. Card names must be exact (except and capitalization) and must match one of the
+			following formats (OR pasted from Limitless):</p>
+		<div class="flex flex-row w-full">
+			<div class="border p-2 w-max">
+				<p>4 TWM 128</p>
+				<p>3 TWM 129</p>
+				<p>4 PAL 185</p>
+				<p>3 SFA 61</p>
+			</div>
+			<div class="border p-2 w-max">
+				<p>4 Dreepy</p>
+				<p>4 Drakloak</p>
+				<p>4 Iono</p>
+				<p>3 Night Stretcher</p>
+			</div>
+			<div class="border p-2 w-max">
+				<p>4 Dreepy TWM 128</p>
+				<p>4 Drakloak TWM 129</p>
+				<p>4 Iono PAL 185</p>
+				<p>3 Night Stretcher SFA 61</p>
+			</div>
+		</div>
+		<br>
+		<fieldset class="fieldset">
+			<label for="import-cards-textarea"></label><textarea id="import-cards-textarea"
+																 class="input grow text-wrap min-h-20 w-full"
+																 placeholder="Cards go here..."></textarea>
+			<p class="label" id="import-cards-chunks-label"></p>
+		</fieldset>
+
+		<fieldset class="fieldset">
+			<legend class="fieldset-legend">API Key <small>(Optional)</small></legend>
+			<input type="text" id="import-cards-api-key" placeholder="e.g. <KEY>" class="input grow"/>
+			<div class="label inline">PokemonTCG.io has a rate limit of one card every 2 seconds.
+				<br>By entering an API key here, you can increase import speed drastically.<br>
+			Get your API key <a href="https://dev.pokemontcg.io/" class="link" target="_blank">here</a></div>
+		</fieldset>
+
+		<br><br>
+		<div class="flex flex-row items-center justify-center gap-4 w-full">
+			<button class="btn btn-secondary grow" id="import-cards-cancel">Cancel</button>
+			<button class="btn btn-primary grow" id="import-cards-yes">Import</button>
+		</div>
+		<br>
+
+		<p><small>
+			<i>This will overwrite all of your current cards!</i>
+		</small></p>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>Cancel</button>
+	</form>
+</dialog>
+
+<script src="scripts/layout.js"></script>
+<script src="scripts/ptcg/ptcg_icon_database.js"></script>
+<script src="scripts/ptcg/ptcg.js"></script>
+
+</body>
+</html>
