@@ -8,6 +8,8 @@ const CardType = Object.freeze({
 let cards = [];
 let editingIndex = -1;
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 //region Classes
 class Card {
 	constructor(name = "", cardType = "", additionalRules = "") {
@@ -26,6 +28,8 @@ class Card {
 
 	fromJson(json) {
 		this.name = json.name;
+		this.cardType = json.cardType;
+		this.additionalRules = json.additionalRules;
 	}
 }
 
@@ -79,6 +83,7 @@ class Pokemon extends Card {
 		return {
 			name: this.name,
 			cardType: this.cardType,
+			additionalRules: this.additionalRules,
 			pokemonType: this.pokemonType,
 			hp: this.hp,
 			evolutionLevel: this.evolutionLevel,
@@ -94,6 +99,7 @@ class Pokemon extends Card {
 	fromJson(json) {
 		this.name = json.name;
 		this.cardType = json.cardType;
+		this.additionalRules = json.additionalRules;
 		this.pokemonType = json.pokemonType;
 		this.hp = json.hp;
 		this.evolutionLevel = json.evolutionLevel;
@@ -127,6 +133,7 @@ class Trainer extends Card {
 		return {
 			name: this.name,
 			cardType: this.cardType,
+			additionalRules: this.additionalRules,
 			subtype: this.subtype,
 			subsubtype: this.subsubtype,
 			text: this.text,
@@ -138,6 +145,7 @@ class Trainer extends Card {
 	fromJson(json) {
 		this.name = json.name;
 		this.cardType = json.cardType;
+		this.additionalRules = json.additionalRules;
 		this.subtype = json.subtype;
 		this.subsubtype = json.subsubtype;
 		this.text = json.text;
@@ -234,6 +242,8 @@ $(document).ready(function () {
 	$("#card-preview").html(getCardHTML(templateCards.energy));
 	updateCardList();
 	setEditingCardIndex(-1);
+
+	$("#import-cards-api-key").val(localStorage.getItem("ptcgapi-key") || "");
 });
 
 function clearInputs() {
@@ -290,8 +300,7 @@ function getCardHTML(card) {
 			${card.evolutionLevel}
 			${card.evolvesFrom !== "" ? `
 				<div class="card-divider card-divider-vertical"></div>
-				<p>Evolves from:</p>
-				<p>${card.evolvesFrom}</p>				
+				Evolves from: ${card.evolvesFrom}				
 			` : ""}
 		</div>
 		<div class="card-divider"></div>
@@ -366,7 +375,9 @@ function getCardHTML(card) {
 	${cardContentHTML}
 	
 	<div class="grow"></div>
-	<div class="card-divider"></div>
+	${
+		card.additionalRules === "" ? "" : "<div class=\"card-divider\"></div>" 
+	}
 	<div class="card-additional-rules">${convertStringToIconObject(card.additionalRules || "", !useBlackWhiteIcons)}</div>
 	${cardBottomLineHTML}
 </div>
@@ -652,8 +663,19 @@ function showError(error) {
 	$("#error-message").text(error);
 }
 
-async function getSetIdFromCode(code) {
-	let response = await fetch(`https://api.pokemontcg.io/v2/sets?q=(ptcgoCode:${code} OR id:${code})&select=id,name,ptcgoCode`);
+async function getSetIdFromCode(code, apiKey = null) {
+
+	let apiKeyObject = {};
+	if (apiKey) {
+		apiKeyObject = {
+			"X-Api-Key": apiKey,
+		};
+	}
+
+	let response = await fetch(`https://api.pokemontcg.io/v2/sets?q=(ptcgoCode:${code} OR id:${code})&select=id,name,ptcgoCode`, {
+		headers: apiKeyObject,
+		method: "GET",
+	});
 	if (!response.ok) {
 		showError(`Error ${response.status}: ${response.statusText} (in: getSerIdFromCode)`);
 		return null;
@@ -666,8 +688,14 @@ async function getSetIdFromCode(code) {
 	return responseJson["data"][0]["id"];
 }
 
-async function getApiCard(query) {
+async function getApiCard(query, apiKey = null) {
 	let response;
+	let apiKeyObject = {};
+	if (apiKey) {
+		apiKeyObject = {
+			"X-Api-Key": apiKey,
+		};
+	}
 
 	let isId = query.startsWith("id:");
 	if (isId) {
@@ -676,11 +704,20 @@ async function getApiCard(query) {
 		query = query.trim();
 		let parts = query.split("-");
 
-		let setId = await getSetIdFromCode(parts[0]);
+		let setId = await getSetIdFromCode(parts[0], apiKey);
+		if (!setId) {
+			return null;
+		}
 
-		response = await fetch(`https://api.pokemontcg.io/v2/cards/${setId}-${parts[1]}`);
+		response = await fetch(`https://api.pokemontcg.io/v2/cards/${setId}-${parts[1]}`, {
+			headers: apiKeyObject,
+			method: "GET",
+		});
 	} else {
-		response = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:"${query}"`);
+		response = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:"${query}"`, {
+			headers: apiKeyObject,
+			method: "GET",
+		});
 	}
 
 	if (!response.ok) {
@@ -688,7 +725,6 @@ async function getApiCard(query) {
 	}
 
 	let json = await response.json();
-	console.log(json);
 
 	if (Array.isArray(json.data)) {
 		if (json.data.length === 0) {
@@ -743,11 +779,22 @@ async function getApiCard(query) {
 
 	thisCard.name = json["name"];
 	if (json["rules"] && json["rules"].length > 0) {
-		thisCard.text = json["rules"][0];
+		if (json["supertype"].toLowerCase() === "pokémon") {
+			while (json["rules"][0].indexOf(":") === -1) {
+				json["rules"].shift();
+			}
+			thisCard.additionalRules = json["rules"].join("\n");
+		} else {
+			if (json["subtypes"] && json["subtypes"].findIndex((item) => item.toLowerCase() === "ace spec") > -1) {
+				json["rules"].shift();
+			}
 
-		json["rules"].shift();
+			thisCard.text = json["rules"][0];
 
-		thisCard.additionalRules = json["rules"].join("\n");
+			json["rules"].shift();
+
+			thisCard.additionalRules = json["rules"].join("\n");
+		}
 	}
 
 	if (json["abilities"]) {
@@ -777,3 +824,141 @@ async function getApiCard(query) {
 
 	return thisCard;
 }
+
+$("#import-cards-yes").on("click", async function (event) {
+	function toggleImportButton(enabled) {
+		if (enabled) {
+			$("#import-cards-yes").removeAttr("disabled");
+		} else {
+			$("#import-cards-yes").attr("disabled", true);
+		}
+	}
+
+	let lines = $("#import-cards-textarea").val().split("\n");
+	let importLabel = $("#import-cards-chunks-label");
+	let importCards = [];
+
+	let apiKey = $("#import-cards-api-key").val().trim();
+
+	importLabel.text("");
+	toggleImportButton(false);
+	let setCodes = {};
+	for (let i = 0; i < lines.length; i++) {
+		let line = lines[i];
+		if (line.trim() === "") {
+			continue;
+		}
+		line = line.trim();
+
+		let parts = line.split(" ");
+
+		// This is a Limitless header
+		if (parts.length === 2 && parts[0].endsWith(":")) {
+			continue;
+		}
+
+		if (parts.length === 1) {
+			// just card
+			importCards.push({
+				name: parts[0],
+				quantity: 1
+			});
+		} else {
+			let amount = parts[0].replaceAll("x", "");
+			let number = parseInt(amount);
+
+			if (isNaN(number)) {
+				showError(`Invalid card amount "${amount}" for card "${parts[1]}"`);
+				toggleImportButton(true);
+				return;
+			}
+
+			parts.shift();
+
+			let isId = false;
+			let cardId = ["", ""];
+			if (parts.length >= 2) {
+				// probably an id
+				let setNumber = parts[parts.length - 2];
+				let id = parts[parts.length - 1];
+				if (setNumber.length === 3) {
+					try {
+						parseInt(id);
+
+						cardId[0] = setNumber;
+						cardId[1] = id;
+
+						isId = true;
+					} catch (e) {
+						// not an id
+					}
+				}
+			}
+
+			let line = parts.join(" ");
+			if (isId) {
+				let set = cardId[0];
+				if (setCodes[set]) {
+					set = setCodes[set];
+				} else {
+					importLabel.text(`Getting set code for set ${set}...`);
+					let setCode = await getSetIdFromCode(set, apiKey);
+					// delay so no rate limit
+					if (apiKey === "") {
+						await delay(2000);
+					}
+					importLabel.text("");
+
+					if (setCode) {
+						setCodes[set] = setCode;
+						set = setCode;
+					} else {
+						showError(`Invalid set code "${set}"`);
+						toggleImportButton(true);
+						return;
+					}
+
+				}
+				line = `${set} ${cardId[1]}`;
+			}
+
+			importCards.push({
+				name: line,
+				quantity: number,
+				isId: isId,
+			});
+		}
+	}
+
+	let tempCards = [];
+
+	for (let i = 0; i < importCards.length; i++) {
+		let thisCard = importCards[i];
+
+		importLabel.text(`Getting card ${i + 1} of ${importCards.length}...`);
+		let thisName = thisCard.isId ? "id:" + thisCard.name : thisCard.name;
+		let card = await getApiCard(thisName, apiKey);
+		if (!card) {
+			continue;
+		}
+		card.quantity = thisCard.quantity;
+		tempCards.push(card);
+
+		if (apiKey === "") {
+			await delay(2000);
+		}
+	}
+
+	cards = tempCards;
+	updateCardList();
+	updateCardPreview();
+	toggleImportButton(true);
+	document.getElementById("import-cards-box").close();
+	saveCards();
+});
+
+$("#import-cards-api-key").on("keyup", function (event) {
+	let thisValue = $(this).val().trim();
+	localStorage.setItem("ptcgapi-key", thisValue);
+	$(this).val(thisValue);
+})

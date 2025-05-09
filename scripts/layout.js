@@ -72,3 +72,12 @@ $(".print-proxies").on("click", function (event) {
 $("#credits").on("click", function (event) {
 	document.getElementById("credits-box").showModal()
 })
+
+
+$("#import-cards").on("click", function (event) {
+	document.getElementById("import-cards-box").showModal();
+})
+
+$("#import-cards-cancel").on("click", function (event) {
+	document.getElementById("import-cards-box").close();
+})

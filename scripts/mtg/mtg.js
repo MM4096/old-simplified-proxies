@@ -500,10 +500,6 @@ $("#clear-card").on("click", function (event) {
 	updatePreviewCard();
 })
 
-$("#import-cards").on("click", function (event) {
-	document.getElementById("import-cards-box").showModal();
-})
-
 $("#import-cards-yes").on("click", function (event) {
 	function toggleImportButton(enabled) {
 		if (enabled) {
@@ -626,10 +622,6 @@ $("#import-cards-yes").on("click", function (event) {
 			earlyExit = true;
 		})
 	}
-})
-
-$("#import-cards-cancel").on("click", function (event) {
-	document.getElementById("import-cards-box").close();
 })
 
 $("#preview-all-proxies").on("click", function (event) {

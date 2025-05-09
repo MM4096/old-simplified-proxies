@@ -132,6 +132,7 @@
 .card-additional-rules {
 	font-size: 0.08in;
 	font-style: italic;
+	white-space: pre-line;
 }
 
 .card-bottom-line {
