@@ -442,9 +442,9 @@ function updateAttacksAndAbilitiesInputs() {
 	for (let i = 0; i < editingPokemonAttacksAndAbilities.length; i++) {
 		let thisAttackOrAbility = editingPokemonAttacksAndAbilities[i];
 		$("#attacks-abilities-container").append(`
-<div class="collapse bg-base-300 border" id="attack-ability-${i}">
+<div class="collapse bg-base-300 border mb-3" id="attack-ability-${i}">
 <input type="checkbox"/>
-<div class="collapse-title">${i}</div>
+<div class="collapse-title">${i}: ${thisAttackOrAbility.name}</div>
 <div class="collapse-content flex flex-col">
 	<fieldset class="fieldset">
 		<legend class="fieldset-legend">Attack Cost/Ability Type</legend>
