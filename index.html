@@ -10,19 +10,35 @@
 
 	<link rel="icon" href="images/favicon.svg" type="image/svg+xml"/>
 
-<!--	<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css"/>-->
-<!--	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>-->
-	<link rel="stylesheet" href="styles/tailwindOut.css"/>
+	<link rel="stylesheet" href="styles/index.css"/>
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!--	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">-->
 </head>
-<body data-theme="light" class="min-h-screen bg-base-100 h-min text-2xl md:text-base">
-<div class="flex flex-col justify-center items-center h-screen gap-2">
-	<h1 class="font-bold text-3xl">Simplified Proxies</h1>
-	<p>Proxies for Magic, the Gathering and Pokémon Trading Card Game, Simplified!</p>
-	<br class="mb-10"/>
-	<a class="btn btn-primary" href="mtg.html">Open Magic the Gathering editor</a>
-	<a class="btn btn-primary" href="ptcg.html">Open Pokémon Trading Card Game editor</a>
+<body>
+
+<!--<div class="w-screen h-screen absolute t-0 l-0 bg-black"></div>-->
+
+<div id="wrapper">
+
+	<div class="preview" id="preview-mtg">
+		<img src="images/index/carousel/mtg/proxy/deflecting-swat.png" alt="deflecting-swat-proxy" class="preview-card proxy"/>
+		<img src="images/index/carousel/mtg/actual/deflecting-swat.png" alt="deflecting-swat-actual" class="preview-card actual"/>
+	</div>
+
+	<div id="main-menu">
+		<h1>Simplified Proxies</h1>
+		<p>Proxies for Magic, the Gathering and Pokémon Trading Card Game, Simplified!</p>
+		<br/>
+		<a class="btn btn-primary" href="mtg.html" id="mtg">Open Magic the Gathering editor</a>
+		<a class="btn btn-primary" href="ptcg.html" id="ptcg">Open Pokémon Trading Card Game editor</a>
+	</div>
+
+
+	<div class="preview" id="preview-ptcg">
+		<img src="images/index/carousel/ptcg/proxy/gardevoir-ex.png" alt="gardevoir-ex-proxy" class="preview-card proxy"/>
+		<img src="images/index/carousel/ptcg/actual/gardevoir-ex.png" alt="gardevoir-ex-actual" class="preview-card actual"/>
+	</div>
+
+	<script src="scripts/index/carousel.js"></script>
 </div>
 </body>
 </html>
