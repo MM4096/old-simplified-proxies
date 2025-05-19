@@ -113,7 +113,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	<div class="reverse-card-mana-cost">${getIconObject(card.reverseManaCost || "", useBlackWhiteIcons, false)}</div>
 </div>
 <div class="card-divider p-0 m-0"></div>
-<p class="reverse-card-type-line">${card.reverseType || ""}</p>
+<p class="reverse-card-type-line">${card.reverseType.replaceAll("{-}", "—") || ""}</p>
 <div class="card-divider p-0 m-0"></div>
 <div class="reverse-card-oracle-text card-oracle-text">${convertOracleTextToHTML(card.reverseText || "", useBlackWhiteIcons, true)}</div>
 <div class="grow"></div>
@@ -132,7 +132,7 @@ function createCardHTML(card, useBlackWhiteIcons = false, id = "") {
 	</div>
 	<div class="card-divider p-0 m-0"></div>
 	
-	<p class="card-type-line">${card.type || ""}</p>
+	<p class="card-type-line">${card.type.replaceAll("{-}", "—") || ""}</p>
 	<div class="card-divider p-0 m-0"></div>
 	<div class="card-oracle-text">${convertOracleTextToHTML(card.text || "", useBlackWhiteIcons, true)}</div>
 	<div style="margin-bottom: 0.2in;"></div>
