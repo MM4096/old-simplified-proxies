@@ -2,8 +2,52 @@ const mtgImages = ["deflecting-swat", "explore", "jace-the-perfected-mind", "sak
 const ptcgImages = ["arven", "budew", "gardevoir-ex", "legacy-energy", "tm-evo"];
 let currentIndex = Math.floor(Math.random() * mtgImages.length);
 
+function preloadImages() {
+	let loadedCounter = 0;
+	for (let i = 0; i < ptcgImages.length; i++) {
+		let img = new Image();
+		let img2 = new Image();
+		img.src = "images/index/carousel/ptcg/proxy/" + ptcgImages[i] + ".png";
+		img2.src = "images/index/carousel/ptcg/actual/" + ptcgImages[i] + ".png";
+		img.onload = function () {
+			loadedCounter++;
+			if (loadedCounter === ptcgImages.length) {
+				setImages();
+				startSwitchSequence();
+			}
+		}
+		img2.onload = function () {
+			loadedCounter++;
+			if (loadedCounter === ptcgImages.length) {
+				setImages();
+				startSwitchSequence();
+			}
+		}
+	}
+	for (let i = 0; i < mtgImages.length; i++) {
+		let img = new Image();
+		let img2 = new Image();
+		img.src = "images/index/carousel/mtg/proxy/" + mtgImages[i] + ".png";
+		img2.src = "images/index/carousel/mtg/actual/" + mtgImages[i] + ".png";
+		img.onload = function () {
+			loadedCounter++;
+			if (loadedCounter === mtgImages.length) {
+				setImages();
+				startSwitchSequence();
+			}
+		}
+		img2.onload = function () {
+			loadedCounter++;
+			if (loadedCounter === mtgImages.length) {
+				setImages();
+				startSwitchSequence();
+			}
+		}
+	}
+}
+
 $(document).ready(function () {
-	startSwitchSequence();
+	// startSwitchSequence();
 });
 
 $("a").on("mouseenter", function () {
