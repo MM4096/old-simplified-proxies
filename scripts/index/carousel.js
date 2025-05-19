@@ -30,7 +30,6 @@ function setImages() {
 }
 
 function startSwitchSequence() {
-	setImages();
 	currentIndex = (currentIndex + 1) % ptcgImages.length;
 
 	$(".proxy").addClass("hidden");
@@ -44,9 +43,12 @@ function startSwitchSequence() {
 	setTimeout(function () {
 		$(".actual").addClass("hidden");
 		$(".proxy").addClass("hidden");
+		setTimeout(function () {
+			setImages();
+		}, 750)
 	}, 6000);
 }
 
 setInterval(function () {
 	startSwitchSequence();
-}, 7000);
+}, 7500);
