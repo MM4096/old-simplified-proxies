@@ -48,6 +48,7 @@ function preloadImages() {
 
 $(document).ready(function () {
 	// startSwitchSequence();
+	preloadImages();
 });
 
 $("a").on("mouseenter", function () {
