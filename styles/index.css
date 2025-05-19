@@ -30,7 +30,7 @@ body {
 		margin: auto;
 		display: block;
 		grid-area: 2/2/3/3;
-		transition: opacity 0.2s;
+		transition: opacity 0.75s;
 	}
 
 	.preview-card:is(.hidden) {
