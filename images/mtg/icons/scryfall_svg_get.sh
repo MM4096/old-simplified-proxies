@@ -20,9 +20,9 @@ echo "$imageData" | jq -c '.data[]' | while read -r imageObj; do
   src="$(echo "$imageObj" | jq '.svg_uri' | sed 's/"//g')"
 
   echo "Downloading icon: $symbol from $src"
-
   # download file
   curl -o temp.svg "$src" -s
+  echo "Converting icon $symbol"
   # convert image to png (100x100 to match b/w icons)
   # Width is omitted because half mana symbols exist
   inkscape -h 128 temp.svg -o "standard/$symbol.png"
