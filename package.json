@@ -18,11 +18,11 @@
     "black and white"
   ],
   "author": "mm4096",
-  "license": "MIT",
+  "license": "SEE LICENSE IN `LICENSE`",
   "bugs": {
     "url": "https://github.com/MM4096/simplified-proxies/issues"
   },
-  "homepage": "https://github.com/MM4096/simplified-proxies#readme",
+  "homepage": "https://simplified-proxies.mm4096.com",
   "dependencies": {
     "@tailwindcss/cli": "^4.1.6",
     "daisyui": "^5.0.35",
