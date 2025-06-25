@@ -7,7 +7,7 @@ Make print-friendly proxies for MTG and PTCG.
 
 This program supports proxying existing cards through search features as well as custom cards by manually entering information.
 
-The program can be accessed at [simplified-proxies.mm4096.com](https://simplified-proxies.mm4096.com) and the license can be found [here](https://github.com/mm4096/simplified-proxies?tab=License-1-ov-file).
+The program can be accessed at [old-simplified-proxies.mm4096.com](https://simplified-proxies.mm4096.com) and the license can be found [here](https://github.com/mm4096/simplified-proxies?tab=License-1-ov-file).
 
 
 All contributions are welcome! Here's a list of features that are planned:
