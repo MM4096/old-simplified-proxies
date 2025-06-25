@@ -1,5 +1,7 @@
 # Simplified Proxies
 
+<p style="color: #ff0000; font-weight: bold">This project has been archived in favor of the newer project at <a href="https://github.com/mm4096/simplified-proxies">github.com/mm4096/simplified-proxies</a>.</p>
+
 ## Description
 Make print-friendly proxies for MTG and PTCG.
 
