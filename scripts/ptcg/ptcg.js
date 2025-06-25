@@ -664,7 +664,6 @@ function showError(error) {
 }
 
 async function getSetIdFromCode(code, apiKey = null) {
-
 	let apiKeyObject = {};
 	if (apiKey) {
 		apiKeyObject = {
